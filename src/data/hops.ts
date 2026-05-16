@@ -1,0 +1,26 @@
+import { Hop } from '@/lib/types';
+
+export const HOPS_DB: Hop[] = [
+  { id:1,  name:"Cascade",              origin:"EUA",          aa:[4.5,7.0],  flavor:"Cítrico (toranja), floral",           use:"Amargor/Aroma" },
+  { id:2,  name:"Centennial",           origin:"EUA",          aa:[9.5,11.5], flavor:"Floral, cítrico, terroso",            use:"Amargor/Aroma" },
+  { id:3,  name:"Chinook",              origin:"EUA",          aa:[12.0,14.0],flavor:"Pinho, resinoso, condimentado",       use:"Amargor" },
+  { id:4,  name:"Citra",                origin:"EUA",          aa:[10.0,15.0],flavor:"Tropical, maracujá, manga, cítrico",  use:"Aroma/Dry-hop" },
+  { id:5,  name:"Mosaic",               origin:"EUA",          aa:[11.0,13.0],flavor:"Tropical, frutas vermelhas, terroso", use:"Aroma/Dry-hop" },
+  { id:6,  name:"Simcoe",               origin:"EUA",          aa:[12.0,14.0],flavor:"Pinho, terroso, maracujá",            use:"Amargor/Aroma" },
+  { id:7,  name:"Columbus (CTZ)",       origin:"EUA",          aa:[14.0,18.0],flavor:"Terroso, resinoso, condimentado",     use:"Amargor" },
+  { id:8,  name:"Amarillo",             origin:"EUA",          aa:[8.0,11.0], flavor:"Laranja, tangerina, floral",          use:"Aroma/Dry-hop" },
+  { id:9,  name:"Magnum",               origin:"EUA/Alemanha", aa:[12.0,14.0],flavor:"Limpo, neutro, nobre",               use:"Amargor" },
+  { id:10, name:"El Dorado",            origin:"EUA",          aa:[14.0,16.0],flavor:"Melancia, pera, tropical",            use:"Aroma/Dry-hop" },
+  { id:20, name:"Saaz",                 origin:"Rep. Tcheca",  aa:[2.0,5.0],  flavor:"Herbal, terroso, condimentado suave", use:"Aroma" },
+  { id:21, name:"Hallertau Mittelfrüh", origin:"Alemanha",     aa:[3.5,5.5],  flavor:"Herbal, floral, condimentado",        use:"Aroma" },
+  { id:22, name:"Tettnanger",           origin:"Alemanha",     aa:[3.5,5.5],  flavor:"Herbal, terroso, condimentado",       use:"Aroma" },
+  { id:23, name:"Perle",                origin:"Alemanha",     aa:[7.0,9.5],  flavor:"Herbal, menta, floral",               use:"Amargor/Aroma" },
+  { id:24, name:"Polaris",              origin:"Alemanha",     aa:[18.0,23.0],flavor:"Mentol, frutas tropicais, pinho",     use:"Amargor" },
+  { id:30, name:"East Kent Goldings",   origin:"Inglaterra",   aa:[4.0,6.0],  flavor:"Suave, floral, herbal, mel",          use:"Aroma" },
+  { id:31, name:"Fuggles",              origin:"Inglaterra",   aa:[3.5,5.5],  flavor:"Suave, terroso, herbal, madeira",     use:"Aroma" },
+  { id:32, name:"Challenger",           origin:"Inglaterra",   aa:[7.0,9.0],  flavor:"Cedro, condimentado, toranja suave",  use:"Amargor/Aroma" },
+  { id:40, name:"Galaxy",               origin:"Austrália",    aa:[11.0,16.0],flavor:"Pêssego, maracujá, cítrico intenso",  use:"Aroma/Dry-hop" },
+  { id:41, name:"Nelson Sauvin",        origin:"Nova Zelândia",aa:[12.0,13.0],flavor:"Uva branca (Sauvignon), goiaba",      use:"Aroma/Dry-hop" },
+  { id:42, name:"Motueka",              origin:"Nova Zelândia",aa:[6.5,8.5],  flavor:"Lima, limão, ervas tropicais",         use:"Aroma" },
+  { id:50, name:"Topaz",                origin:"Brasil/AU",    aa:[10.0,16.0],flavor:"Frutas tropicais, condimentado",      use:"Amargor/Aroma" },
+];
