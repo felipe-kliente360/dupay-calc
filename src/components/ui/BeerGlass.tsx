@@ -4,43 +4,54 @@ import { GlassType } from '@/lib/types';
 
 const GLASS_SHAPES: Record<GlassType, { body: string; fill: string; foam: string; hi: string; base: string | null }> = {
   pint: {
-    body: "M7,10 L41,10 L38,67 L10,67 Z",
-    fill: "M8,10 L40,10 L37,67 L11,67 Z",
-    foam: "M8,10 Q24,5 40,10 L40,17 Q24,13 8,17 Z",
-    hi:   "M12,14 L10,60", base: null,
+    // Shaker pint — trapézio clássico mais largo no topo
+    body: "M6,67 L42,67 L38,10 L10,10 Z",
+    fill: "M7,67 L41,67 L37,10 L11,10 Z",
+    foam: "M11,10 Q24,5 37,10 L37,18 Q24,14 11,18 Z",
+    hi:   "M13,16 L11,60",
+    base: null,
   },
   pilsner: {
-    body: "M9,8 L39,8 L34,65 L14,65 Z",
-    fill: "M10,8 L38,8 L33,65 L15,65 Z",
-    foam: "M10,8 Q24,3 38,8 L38,15 Q24,11 10,15 Z",
-    hi:   "M13,12 L11,58", base: "M12,65 L10,71 L38,71 L36,65 Z",
+    // Pilsner — base estreita, abre gradualmente
+    body: "M14,67 L34,67 L36,50 L38,10 L10,10 L12,50 Z",
+    fill: "M15,67 L33,67 L35,50 L37,10 L11,10 L13,50 Z",
+    foam: "M11,10 Q24,5 37,10 L37,18 Q24,14 11,18 Z",
+    hi:   "M13,16 L13,58",
+    base: "M11,67 L9,73 L39,73 L37,67 Z",
   },
   weizen: {
-    body: "M2,8 L46,8 L36,67 L12,67 Z",
-    fill: "M3,8 L45,8 L35,67 L13,67 Z",
-    foam: "M3,8 Q24,2 45,8 L45,17 Q24,12 3,17 Z",
-    hi:   "M7,12 L11,60", base: null,
+    // Weizen — talo estreito na base, abre muito na parte superior
+    body: "M4,67 L44,67 L44,55 Q44,42 36,28 Q30,14 24,10 Q18,14 12,28 Q4,42 4,55 Z",
+    fill: "M5,67 L43,67 L43,55 Q43,43 35,29 Q29,16 24,12 Q19,16 13,29 Q5,43 5,55 Z",
+    foam: "M13,12 Q24,6 35,12 L34,20 Q24,16 14,20 Z",
+    hi:   "M6,60 L8,30",
+    base: null,
   },
   goblet: {
-    body: "M12,62 Q7,48 8,32 Q9,14 24,10 Q39,14 40,32 Q41,48 36,62 L30,62 L29,68 L38,68 L38,72 L10,72 L10,68 L19,68 L18,62 Z",
-    fill: "M14,60 Q10,48 11,32 Q12,18 24,14 Q36,18 37,32 Q38,48 34,60 Z",
-    foam: "M11,16 Q24,10 37,16 L37,23 Q24,18 11,23 Z",
-    hi:   "M13,30 Q12,20 16,16", base: null,
+    // Goblet / Cálice belga — esférico com haste
+    body: "M14,62 Q6,50 7,34 Q8,16 24,11 Q40,16 41,34 Q42,50 34,62 L30,62 L29,68 L38,68 L38,72 L10,72 L10,68 L19,68 L18,62 Z",
+    fill: "M15,60 Q9,50 10,34 Q11,20 24,15 Q37,20 38,34 Q39,50 33,60 Z",
+    foam: "M11,17 Q24,10 37,17 L36,24 Q24,19 12,24 Z",
+    hi:   "M12,50 Q11,30 14,18",
+    base: null,
   },
   tulip: {
-    body: "M10,67 L9,42 Q10,28 16,16 L16,8 L32,8 L32,16 Q38,28 39,42 L38,67 Z",
-    fill: "M11,67 L10,42 Q11,29 17,17 L17,9 L31,9 L31,17 Q37,29 38,42 L37,67 Z",
-    foam: "M17,9 Q24,4 31,9 L31,16 Q24,12 17,16 Z",
-    hi:   "M13,14 L11,55", base: null,
+    // Tulip / IPA — copo bulboso oval, SEM pescoço reto de garrafa
+    body: "M11,67 L37,67 Q42,62 42,52 Q43,38 37,24 Q31,10 24,8 Q17,10 11,24 Q5,38 6,52 Q6,62 11,67 Z",
+    fill: "M12,67 L36,67 Q41,62 41,52 Q42,39 36,25 Q30,12 24,10 Q18,12 12,25 Q6,39 7,52 Q7,62 12,67 Z",
+    foam: "M13,10 Q24,5 35,10 L34,17 Q24,13 14,17 Z",
+    hi:   "M9,60 L10,30",
+    base: null,
   },
 };
 
 export function glassTypeFromCat(cat = ''): GlassType {
   if (!cat) return 'pint';
-  if (cat.includes('Trigo')) return 'weizen';
-  if (cat.includes('Lager') || cat.includes('Tchec')) return 'pilsner';
-  if (cat.includes('Belg') && cat.includes('Fort')) return 'goblet';
-  if (cat.includes('IPA') || cat.includes('Pale') || cat.includes('Amber')) return 'tulip';
+  const c = cat.toLowerCase();
+  if (c.includes('trigo') || c.includes('weizen') || c.includes('wit')) return 'weizen';
+  if (c.includes('lager') || c.includes('pilsner') || c.includes('tchec') || c.includes('pils')) return 'pilsner';
+  if ((c.includes('belg') && c.includes('fort')) || c.includes('trappist') || c.includes('abbey') || c.includes('dubbel') || c.includes('tripel')) return 'goblet';
+  if (c.includes('ipa') || c.includes('pale ale') || c.includes('saison') || c.includes('amber')) return 'tulip';
   return 'pint';
 }
 
@@ -57,36 +68,40 @@ export function BeerGlass({ srm, size = 48, cat = '' }: BeerGlassProps) {
   const type = glassTypeFromCat(cat);
   const g    = GLASS_SHAPES[type];
   const uid  = `g${type}${Math.round(v)}`;
-  const vw   = 48; const vh = 76;
+  const vw   = 48;
+  const vh   = type === 'goblet' ? 76 : 76;
   const svgH = (size / vw) * vh;
-  const textY = type === 'goblet' ? 40 : 46;
 
   return (
     <svg width={size} height={svgH} viewBox={`0 0 ${vw} ${vh}`} fill="none" style={{ display: 'block', overflow: 'visible', flexShrink: 0 }}>
       <defs>
         <linearGradient id={`liq-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stopColor={hex} stopOpacity={.72} />
-          <stop offset="48%"  stopColor={hex} stopOpacity={.97} />
-          <stop offset="100%" stopColor={hex} stopOpacity={.78} />
+          <stop offset="0%"   stopColor={hex} stopOpacity={.65} />
+          <stop offset="45%"  stopColor={hex} stopOpacity={.96} />
+          <stop offset="100%" stopColor={hex} stopOpacity={.72} />
         </linearGradient>
         <linearGradient id={`foam-${uid}`} x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stopColor="#FFFDF8" stopOpacity={1} />
-          <stop offset="100%" stopColor="#EEE0B8" stopOpacity={.9} />
+          <stop offset="100%" stopColor="#EEE0B8" stopOpacity={.85} />
         </linearGradient>
       </defs>
       {g.base && <path d={g.base} fill="#E8D8A8" stroke="#C0A860" strokeWidth="1" />}
       <path d={g.fill} fill={`url(#liq-${uid})`} />
       <path d={g.foam} fill={`url(#foam-${uid})`} />
-      <circle cx="14" cy="13" r="2.2" fill="white" opacity={.5} />
-      <circle cx="24" cy="11" r="3.2" fill="white" opacity={.6} />
-      <circle cx="34" cy="13" r="2.2" fill="white" opacity={.5} />
-      <circle cx="19" cy="15" r="1.4" fill="white" opacity={.4} />
-      <circle cx="29" cy="15" r="1.4" fill="white" opacity={.4} />
-      <path d={g.body} stroke="#C4A870" strokeWidth="1.5" fill="none" />
-      <path d={g.hi} stroke="white" strokeWidth="2" strokeLinecap="round" opacity={.2} />
-      <text x="24" y={textY} textAnchor="middle"
-        fill={dark ? 'rgba(255,255,255,.68)' : 'rgba(0,0,0,.42)'}
-        fontSize="8" fontFamily="monospace" fontWeight="bold">
+      {/* Foam bubbles */}
+      <circle cx="14" cy="13" r="2.2" fill="white" opacity={.45} />
+      <circle cx="24" cy="11" r="3.0" fill="white" opacity={.55} />
+      <circle cx="34" cy="13" r="2.2" fill="white" opacity={.45} />
+      <circle cx="19" cy="15" r="1.4" fill="white" opacity={.35} />
+      <circle cx="29" cy="15" r="1.4" fill="white" opacity={.35} />
+      {/* Glass outline */}
+      <path d={g.body} stroke="#B8986A" strokeWidth="1.4" fill="none" />
+      {/* Highlight */}
+      <path d={g.hi} stroke="white" strokeWidth="2" strokeLinecap="round" opacity={.18} />
+      {/* SRM value */}
+      <text x="24" y="52" textAnchor="middle"
+        fill={dark ? 'rgba(255,255,255,.6)' : 'rgba(0,0,0,.35)'}
+        fontSize="7.5" fontFamily="monospace" fontWeight="bold">
         {Math.round(v)}
       </text>
     </svg>
