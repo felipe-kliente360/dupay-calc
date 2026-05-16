@@ -16,9 +16,10 @@ interface GrainBillProps {
 export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
   const [newMaltId, setNewMaltId] = useState(1);
 
-  const addGrain = () => setGrains(g => [...g, { id: Date.now(), maltId: newMaltId, kg: 1.0 }]);
-  const remGrain = (id: number) => setGrains(g => g.filter(x => x.id !== id));
-  const updGrain = (id: number, kg: number) => setGrains(g => g.map(x => x.id === id ? { ...x, kg } : x));
+  const addGrain    = () => setGrains(g => [...g, { id: Date.now(), maltId: newMaltId, kg: 1.0 }]);
+  const remGrain    = (id: number) => setGrains(g => g.filter(x => x.id !== id));
+  const updKg       = (id: number, kg: number) => setGrains(g => g.map(x => x.id === id ? { ...x, kg } : x));
+  const updEBC      = (id: number, ebc: number) => setGrains(g => g.map(x => x.id === id ? { ...x, ebc } : x));
 
   const sel = { background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 6, color: T.ink, padding: '7px 10px', fontSize: 12, fontFamily: T.body, width: 'auto', outline: 'none', cursor: 'pointer', maxWidth: 190 };
   const addBtn = { background: T.amber, border: 'none', color: 'white', padding: '9px 14px', borderRadius: 7, cursor: 'pointer', fontFamily: T.mono, fontWeight: 500, fontSize: 11, letterSpacing: .3, whiteSpace: 'nowrap' as const, flexShrink: 0 };
@@ -46,9 +47,10 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
         </div>
       )}
       {grains.map(g => {
-        const m  = MALTS_DB.find(x => x.id === g.maltId);
-        const tm = m ? MALT_TYPE[m.type] : null;
+        const m   = MALTS_DB.find(x => x.id === g.maltId);
+        const tm  = m ? MALT_TYPE[m.type] : null;
         const pct = totalKg > 0 ? (g.kg / totalKg * 100) : 0;
+        const ebcVal = g.ebc ?? m?.ebc ?? 0;
         return (
           <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 10px', background: tm?.bg || T.bgRow, borderRadius: 8, border: `1px solid ${T.b1}`, marginBottom: 6 }}>
             <div style={{ width: 3, alignSelf: 'stretch', minHeight: 32, borderRadius: 2, background: tm?.color || T.b2, flexShrink: 0 }} />
@@ -57,7 +59,20 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
                 <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600 }}>{m?.name}</span>
                 <Pill color={tm?.color || T.inkMuted}>{tm?.label}</Pill>
               </div>
-              <div style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginTop: 2 }}>{m?.ebc} EBC · GU {m?.gu}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
+                <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9 }}>EBC</span>
+                <div style={{ width: 52 }}>
+                  <NumInput value={ebcVal} min={1} max={2000} step={5} onChange={v => updEBC(g.id, v)} small />
+                </div>
+                {g.ebc !== undefined && g.ebc !== m?.ebc && (
+                  <button
+                    onClick={() => setGrains(gs => gs.map(x => x.id === g.id ? { ...x, ebc: undefined } : x))}
+                    style={{ background: 'none', border: 'none', color: T.inkDim, fontSize: 8, cursor: 'pointer', fontFamily: T.mono, padding: '0 2px' }}
+                    title="Resetar EBC"
+                  >↺</button>
+                )}
+                <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginLeft: 4 }}>· GU {m?.gu}</span>
+              </div>
             </div>
             <div style={{ width: 36, flexShrink: 0 }}>
               <div style={{ height: 3, background: T.b1, borderRadius: 2, marginBottom: 2 }}>
@@ -66,7 +81,7 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
               <div style={{ fontFamily: T.mono, color: tm?.color || T.amber, fontSize: 8, textAlign: 'right' }}>{pct.toFixed(0)}%</div>
             </div>
             <div style={{ width: 74, flexShrink: 0 }}>
-              <NumInput value={g.kg} unit="kg" min={0.05} max={50} step={0.1} onChange={v => updGrain(g.id, v)} small />
+              <NumInput value={g.kg} unit="kg" min={0.05} max={50} step={0.1} onChange={v => updKg(g.id, v)} small />
             </div>
             <button onClick={() => remGrain(g.id)} style={remBtn} title="Remover">✕</button>
           </div>

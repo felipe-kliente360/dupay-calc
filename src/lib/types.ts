@@ -44,6 +44,7 @@ export interface GrainEntry {
   id: number;
   maltId: number;
   kg: number;
+  ebc?: number;
 }
 
 export interface HopEntry {

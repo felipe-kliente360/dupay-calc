@@ -23,7 +23,10 @@ export const calcSRM = (grains: GrainEntry[], volL: number): number => {
   if (!volL) return 0;
   const mcu = grains.reduce((s, g) => {
     const m = MALTS_DB.find(x => x.id === g.maltId);
-    return m ? s + g.kg * 2.2046 * (m.ebc / 1.97) : s;
+    if (!m) return s;
+    const ebc = g.ebc ?? m.ebc;
+    const lov = (ebc + 1.2) / 2.65;
+    return s + g.kg * 2.2046 * lov;
   }, 0) / (volL * 0.2642);
   return mcu > 0 ? 1.4922 * Math.pow(mcu, 0.6859) : 0;
 };
