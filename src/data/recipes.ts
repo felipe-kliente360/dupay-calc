@@ -60,7 +60,7 @@ export const RECIPES_DB: RecipeBase[] = [
     yeastCode:"US-05",
     notes:"Mostura a 65°C por 60 min para corpo mais seco. Fermentar a 18–20°C. Dry-hop 3 dias." },
 
-  { id:"hazy-ipa", styleId:"21A", name:"Hazy New England IPA",
+  { id:"hazy-ipa", styleId:"21C", name:"Hazy New England IPA",
     refBatchL:20, refEfficiency:75,
     grains:[ {maltId:2,kg:4.5}, {maltId:31,kg:1.2}, {maltId:30,kg:0.8} ],
     hops:[ {hopId:9,g:15,time:60,aa:13.0}, {hopId:4,g:30,time:10,aa:12.5}, {hopId:5,g:40,time:0,aa:12.0}, {hopId:4,g:40,time:0,aa:12.5} ],
@@ -162,7 +162,7 @@ export const RECIPES_DB: RecipeBase[] = [
     yeastCode:"BE-134",
     notes:"Mostura a 65°C para Saison seca. Deixar temp subir até 30°C na fermentação — mais ésteres." },
 
-  { id:"tripel", styleId:"26A", name:"Belgian Tripel",
+  { id:"tripel", styleId:"26C", name:"Belgian Tripel",
     refBatchL:20, refEfficiency:75,
     grains:[ {maltId:1,kg:7.5} ],
     hops:[ {hopId:20,g:30,time:90,aa:3.5}, {hopId:20,g:20,time:15,aa:3.5}, {hopId:21,g:15,time:0,aa:4.5} ],
