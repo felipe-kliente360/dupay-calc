@@ -52,7 +52,7 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   };
 
   const leftPanel = (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
         <div style={{ fontFamily: T.serif, fontSize: 15, fontWeight: 700, color: T.ink, marginBottom: 10 }}>🍺 Estilo Alvo</div>
         <select value={styleId} onChange={e => setStyleId(e.target.value)} style={sel}>
@@ -128,7 +128,7 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 16, alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 24, alignItems: 'start' }}>
       <div style={{ position: 'sticky', top: 70 }}>{leftPanel}</div>
       <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
     </div>

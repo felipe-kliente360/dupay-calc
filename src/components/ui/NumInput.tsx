@@ -24,7 +24,7 @@ export function NumInput({ value, onChange, min = 0, max, step = 1, unit, small 
   }, [value]);
 
   const commit = (s: string) => {
-    const n = parseFloat(s);
+    const n = parseFloat(s.replace(',', '.'));
     if (!isNaN(n)) {
       const clamped = max !== undefined ? Math.min(max, Math.max(min, n)) : Math.max(min, n);
       ref.current = clamped;
@@ -49,8 +49,8 @@ export function NumInput({ value, onChange, min = 0, max, step = 1, unit, small 
         onBlur={e => commit(e.target.value)}
         onKeyDown={e => {
           if (e.key === 'Enter') commit((e.target as HTMLInputElement).value);
-          if (e.key === 'ArrowUp') { const n = parseFloat(raw) || 0; commit(String(parseFloat((n + step).toFixed(6)))); }
-          if (e.key === 'ArrowDown') { const n = parseFloat(raw) || 0; commit(String(parseFloat((n - step).toFixed(6)))); }
+          if (e.key === 'ArrowUp') { const n = parseFloat(raw.replace(',', '.')) || 0; commit(String(parseFloat((n + step).toFixed(6)))); }
+          if (e.key === 'ArrowDown') { const n = parseFloat(raw.replace(',', '.')) || 0; commit(String(parseFloat((n - step).toFixed(6)))); }
         }}
         style={{
           background: T.bgInput,

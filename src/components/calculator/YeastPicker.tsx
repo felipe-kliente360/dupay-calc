@@ -19,7 +19,7 @@ export function YeastPicker({ yeastId, setYeastId, customAtten, setCustomAtten, 
   const sel = { background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 6, color: T.ink, padding: '9px 12px', fontSize: 13, fontFamily: T.body, width: '100%', outline: 'none', cursor: 'pointer' };
 
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 12, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 18, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
       <SectionHead title="🧫 Levedura" />
       <select
         value={yeastId}

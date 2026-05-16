@@ -25,7 +25,7 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
   const remBtn = { background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted, borderRadius: 6, padding: '5px 9px', cursor: 'pointer', fontFamily: T.mono, fontSize: 12, flexShrink: 0, lineHeight: 1 };
 
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 12, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 18, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
       <SectionHead
         title="🌾 Maltes"
         info={totalKg > 0 ? `${totalKg.toFixed(2)} kg` : ''}
