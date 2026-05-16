@@ -18,7 +18,7 @@ export function ResultsPanel({ style, og, fg, ibu, abv, srm, ebc, cat = '' }: Re
   const score = checks.filter(Boolean).length;
 
   return (
-    <div style={{ background: T.bgCard, border: `1.5px solid ${allOk ? T.ok : T.b1}`, borderRadius: 12, padding: 16, boxShadow: allOk ? `0 0 0 3px ${T.ok}18` : 'none', transition: 'all .3s' }}>
+    <div style={{ background: T.bgCard, border: `1.5px solid ${allOk ? T.ok : T.b1}`, borderRadius: 12, padding: 16, marginBottom: 18, boxShadow: allOk ? `0 0 0 3px ${T.ok}18` : 'none', transition: 'all .3s' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink }}>Parâmetros da Receita</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

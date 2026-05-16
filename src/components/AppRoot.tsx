@@ -21,9 +21,7 @@ function AppInner() {
   const waterCalcPreview = calcWater(equip, 3);
 
   const srm = useMemo(() => calcSRM(grains, equip.batchL), [grains, equip.batchL]);
-  const dynBg = srm > 0.5
-    ? `linear-gradient(160deg, ${srmHex(srm)}28 0%, ${T.bg} 52%)`
-    : T.bg;
+  const dynBg = srm > 0.5 ? srmHex(srm) : T.bg;
 
   return (
     <div style={{ minHeight: '100vh', background: dynBg, fontFamily: T.body, color: T.ink, paddingBottom: mobile ? 68 : 40, transition: 'background 0.6s ease' }}>

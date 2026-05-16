@@ -106,7 +106,7 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   if (mobile) {
     return (
       <div>
-        <div style={{ background: T.bgCard, borderRadius: 10, border: `1px solid ${T.b1}`, padding: 12, marginBottom: 12 }}>
+        <div style={{ background: T.bgCard, borderRadius: 10, border: `1px solid ${T.b1}`, padding: 12, marginBottom: 18 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink }}>🍺 Estilo Alvo</div>
             <button onClick={onOpenEquip} style={{ background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted, borderRadius: 5, padding: '3px 8px', cursor: 'pointer', fontFamily: T.mono, fontSize: 10 }}>⚙ Equip.</button>
