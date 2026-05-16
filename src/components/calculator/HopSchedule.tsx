@@ -20,35 +20,34 @@ const midAA = (hopId: number) => {
   return h ? parseFloat(((h.aa[0] + h.aa[1]) / 2).toFixed(1)) : 5.0;
 };
 
-// ── Estilos compartilhados (mesmos do GrainBill) ───────────────────────────
 const SEL: React.CSSProperties = {
   background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 8,
   color: T.ink, padding: '9px 10px', fontSize: 12, fontFamily: T.body,
-  outline: 'none', cursor: 'pointer', flex: 1, minWidth: 0, height: 36,
+  outline: 'none', cursor: 'pointer', width: '100%', height: 36,
 };
 const FIELD_LABEL: React.CSSProperties = {
   fontFamily: T.mono, color: T.inkDim, fontSize: 8,
   letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4,
 };
 const ADD_BTN: React.CSSProperties = {
-  height: 36, padding: '0 18px', borderRadius: 8, border: 'none',
+  height: 36, borderRadius: 8, border: 'none',
   background: T.hop, color: 'white', cursor: 'pointer',
-  fontFamily: T.mono, fontWeight: 600, fontSize: 11, letterSpacing: 0.4,
-  whiteSpace: 'nowrap', flexShrink: 0,
+  fontFamily: T.mono, fontWeight: 700, fontSize: 12, letterSpacing: 0.4,
+  whiteSpace: 'nowrap', flex: 1,
   boxShadow: '0 2px 8px rgba(86,120,40,.28)',
 };
 const DEL_BTN: React.CSSProperties = {
-  width: 28, height: 28, borderRadius: '50%',
-  background: 'none', border: `1px solid ${T.b2}`,
+  width: 30, height: 30, borderRadius: '50%',
+  background: 'none', border: `1.5px solid ${T.b2}`,
   color: T.inkMuted, cursor: 'pointer',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontSize: 11, fontFamily: T.mono, flexShrink: 0,
+  fontSize: 12, fontFamily: T.mono, flexShrink: 0, lineHeight: 1,
 };
 
 const HOP_FIELDS = [
-  { label: 'Qtd.',  field: 'g'    as const, unit: 'g',   min: 0,   max: 500, step: 5,   width: 68 },
-  { label: 'Tempo', field: 'time' as const, unit: 'min', min: 0,   max: 120, step: 5,   width: 68 },
-  { label: 'AA%',   field: 'aa'   as const, unit: '%',   min: 0.5, max: 30,  step: 0.1, width: 60 },
+  { label: 'Qtd.',  field: 'g'    as const, unit: 'g',   min: 0,   max: 500, step: 5   },
+  { label: 'Tempo', field: 'time' as const, unit: 'min', min: 0,   max: 120, step: 5   },
+  { label: 'AA%',   field: 'aa'   as const, unit: '%',   min: 0.5, max: 30,  step: 0.1 },
 ];
 
 export function HopSchedule({ hops, setHops, ibu, boilOG, batchL }: HopScheduleProps) {
@@ -66,21 +65,22 @@ export function HopSchedule({ hops, setHops, ibu, boilOG, batchL }: HopScheduleP
 
       {/* Zona de adição */}
       <div style={{
-        display: 'flex', gap: 8, alignItems: 'flex-end', flexWrap: 'wrap',
         background: T.bgHop, borderRadius: 10, padding: '12px 14px',
         border: `1px solid ${T.b1}`, marginBottom: 14,
       }}>
-        <div style={{ flex: 1, minWidth: 140 }}>
+        {/* Linha 1: select */}
+        <div style={{ marginBottom: 10 }}>
           <div style={FIELD_LABEL}>Lúpulo</div>
           <select value={newHopId} onChange={e => handleHopChange(Number(e.target.value))} style={SEL}>
             {HOPS_DB.map(h => <option key={h.id} value={h.id}>{h.name} ({h.origin})</option>)}
           </select>
         </div>
-        <div style={{ width: 72, flexShrink: 0 }}>
-          <div style={FIELD_LABEL}>AA%</div>
-          <NumInput value={newAA} min={0.5} max={30} step={0.1} onChange={setNewAA} small />
-        </div>
-        <div style={{ alignSelf: 'flex-end' }}>
+        {/* Linha 2: AA% + botão */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+          <div style={{ width: 88 }}>
+            <div style={FIELD_LABEL}>AA%</div>
+            <NumInput value={newAA} min={0.5} max={30} step={0.1} onChange={setNewAA} small />
+          </div>
           <button onClick={addHop} style={ADD_BTN}>+ Lúpulo</button>
         </div>
       </div>
@@ -100,34 +100,32 @@ export function HopSchedule({ hops, setHops, ibu, boilOG, batchL }: HopScheduleP
 
         return (
           <div key={h.id} style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '10px 12px',
             background: T.bgHop,
             borderRadius: 10, border: `1px solid ${T.b1}`,
-            marginBottom: 6, flexWrap: 'wrap',
+            marginBottom: 6, overflow: 'hidden',
           }}>
-            {/* Barra de cor */}
-            <div style={{ width: 3, alignSelf: 'stretch', minHeight: 32, borderRadius: 2, background: T.hop, flexShrink: 0 }} />
-
-            {/* Nome + info */}
-            <div style={{ flex: '1 1 120px', minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600 }}>{hp?.name}</span>
-                <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9 }}>{hp?.origin}</span>
-              </div>
-              <div style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginTop: 3 }}>
-                {isDryHop
-                  ? <span style={{ color: T.hop, fontWeight: 600 }}>Dry-hop</span>
-                  : <><b style={{ color: T.hop }}>{hopIBU.toFixed(1)} IBU</b> · </>
-                }
-                {hp?.flavor}
+            {/* Linha 1: nome + info */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px 6px 12px' }}>
+              <div style={{ width: 3, alignSelf: 'stretch', minHeight: 28, borderRadius: 2, background: T.hop, flexShrink: 0 }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600 }}>{hp?.name}</span>
+                  <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9 }}>{hp?.origin}</span>
+                </div>
+                <div style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginTop: 3 }}>
+                  {isDryHop
+                    ? <span style={{ color: T.hop, fontWeight: 600 }}>Dry-hop</span>
+                    : <><b style={{ color: T.hop }}>{hopIBU.toFixed(1)} IBU</b> · </>
+                  }
+                  {hp?.flavor}
+                </div>
               </div>
             </div>
 
-            {/* Campos numéricos */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', flexShrink: 0 }}>
-              {HOP_FIELDS.map(({ label, field, unit, min, max, step, width }) => (
-                <div key={field} style={{ width }}>
+            {/* Linha 2: inputs + excluir */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, padding: '0 12px 10px 23px' }}>
+              {HOP_FIELDS.map(({ label, field, unit, min, max, step }) => (
+                <div key={field} style={{ flex: 1 }}>
                   <div style={FIELD_LABEL}>{label}</div>
                   <NumInput
                     value={h[field] as number}
@@ -137,10 +135,8 @@ export function HopSchedule({ hops, setHops, ibu, boilOG, batchL }: HopScheduleP
                   />
                 </div>
               ))}
+              <button onClick={() => remHop(h.id)} style={DEL_BTN} title="Remover">✕</button>
             </div>
-
-            {/* Excluir */}
-            <button onClick={() => remHop(h.id)} style={DEL_BTN} title="Remover">✕</button>
           </div>
         );
       })}

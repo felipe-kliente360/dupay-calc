@@ -15,40 +15,29 @@ interface GrainBillProps {
 
 const defaultEBC = (id: number) => MALTS_DB.find(x => x.id === id)?.ebc ?? 3;
 
-// ── Estilos compartilhados ─────────────────────────────────────────────────
 const SEL: React.CSSProperties = {
   background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 8,
   color: T.ink, padding: '9px 10px', fontSize: 12, fontFamily: T.body,
-  outline: 'none', cursor: 'pointer', flex: 1, minWidth: 0, height: 36,
+  outline: 'none', cursor: 'pointer', width: '100%', height: 36,
 };
 const FIELD_LABEL: React.CSSProperties = {
   fontFamily: T.mono, color: T.inkDim, fontSize: 8,
   letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4,
 };
 const ADD_BTN: React.CSSProperties = {
-  height: 36, padding: '0 18px', borderRadius: 8, border: 'none',
+  height: 36, borderRadius: 8, border: 'none',
   background: T.amber, color: 'white', cursor: 'pointer',
-  fontFamily: T.mono, fontWeight: 600, fontSize: 11, letterSpacing: 0.4,
-  whiteSpace: 'nowrap', flexShrink: 0,
+  fontFamily: T.mono, fontWeight: 700, fontSize: 12, letterSpacing: 0.4,
+  whiteSpace: 'nowrap', flex: 1,
   boxShadow: '0 2px 8px rgba(184,114,16,.28)',
 };
 const DEL_BTN: React.CSSProperties = {
-  width: 28, height: 28, borderRadius: '50%',
-  background: 'none', border: `1px solid ${T.b2}`,
+  width: 30, height: 30, borderRadius: '50%',
+  background: 'none', border: `1.5px solid ${T.b2}`,
   color: T.inkMuted, cursor: 'pointer',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontSize: 11, fontFamily: T.mono, flexShrink: 0,
+  fontSize: 12, fontFamily: T.mono, flexShrink: 0, lineHeight: 1,
 };
-
-// ── Componente de campo com label ──────────────────────────────────────────
-function LabeledInput({ label, width, children }: { label: string; width: number; children: React.ReactNode }) {
-  return (
-    <div style={{ width, flexShrink: 0 }}>
-      <div style={FIELD_LABEL}>{label}</div>
-      {children}
-    </div>
-  );
-}
 
 export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
   const [newMaltId, setNewMaltId] = useState(1);
@@ -71,11 +60,11 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
 
       {/* Zona de adição */}
       <div style={{
-        display: 'flex', gap: 8, alignItems: 'flex-end', flexWrap: 'wrap',
         background: T.bgAmber, borderRadius: 10, padding: '12px 14px',
         border: `1px solid ${T.b1}`, marginBottom: 14,
       }}>
-        <div style={{ flex: 1, minWidth: 140 }}>
+        {/* Linha 1: select */}
+        <div style={{ marginBottom: 10 }}>
           <div style={FIELD_LABEL}>Malte</div>
           <select value={newMaltId} onChange={e => handleMaltChange(Number(e.target.value))} style={SEL}>
             {(['base','crystal','roasted','adjunct'] as const).map(t => (
@@ -85,10 +74,12 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
             ))}
           </select>
         </div>
-        <LabeledInput label="EBC" width={72}>
-          <NumInput value={newEBC} min={1} max={2000} step={5} onChange={setNewEBC} small />
-        </LabeledInput>
-        <div style={{ alignSelf: 'flex-end' }}>
+        {/* Linha 2: EBC + botão */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+          <div style={{ width: 88 }}>
+            <div style={FIELD_LABEL}>EBC</div>
+            <NumInput value={newEBC} min={1} max={2000} step={5} onChange={setNewEBC} small />
+          </div>
           <button onClick={addGrain} style={ADD_BTN}>+ Malte</button>
         </div>
       </div>
@@ -110,54 +101,47 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
 
         return (
           <div key={g.id} style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '10px 12px',
             background: tm?.bg || T.bgRow,
             borderRadius: 10, border: `1px solid ${T.b1}`,
-            marginBottom: 6,
+            marginBottom: 6, overflow: 'hidden',
           }}>
-            {/* Barra de cor do tipo */}
-            <div style={{ width: 3, alignSelf: 'stretch', borderRadius: 2, background: tm?.color || T.b2, flexShrink: 0 }} />
-
-            {/* Nome + info */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>{m?.name}</span>
-                <Pill color={tm?.color || T.inkMuted}>{tm?.label}</Pill>
+            {/* Linha 1: nome + tipo + % */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px 6px 12px' }}>
+              <div style={{ width: 3, alignSelf: 'stretch', minHeight: 28, borderRadius: 2, background: tm?.color || T.b2, flexShrink: 0 }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600 }}>{m?.name}</span>
+                  <Pill color={tm?.color || T.inkMuted}>{tm?.label}</Pill>
+                </div>
+                <div style={{ fontFamily: T.mono, color: T.inkDim, fontSize: 9, marginTop: 3 }}>GU {m?.gu}</div>
               </div>
-              <div style={{ fontFamily: T.mono, color: T.inkDim, fontSize: 9, marginTop: 3 }}>
-                GU {m?.gu}
+              {/* Barra de percentual */}
+              <div style={{ width: 44, flexShrink: 0, textAlign: 'right' }}>
+                <div style={{ height: 3, background: T.b1, borderRadius: 2, marginBottom: 3 }}>
+                  <div style={{ width: `${Math.min(100, pct)}%`, height: '100%', background: tm?.color || T.amber, borderRadius: 2, minWidth: pct > 0 ? 2 : 0 }} />
+                </div>
+                <span style={{ fontFamily: T.mono, color: tm?.color || T.amber, fontSize: 9 }}>{pct.toFixed(0)}%</span>
               </div>
             </div>
 
-            {/* Barra de percentual */}
-            <div style={{ width: 38, flexShrink: 0, textAlign: 'right' }}>
-              <div style={{ height: 3, background: T.b1, borderRadius: 2, marginBottom: 3 }}>
-                <div style={{ width: `${Math.min(100, pct)}%`, height: '100%', background: tm?.color || T.amber, borderRadius: 2, minWidth: pct > 0 ? 2 : 0 }} />
+            {/* Linha 2: inputs + excluir */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, padding: '0 12px 10px 23px' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ ...FIELD_LABEL, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>EBC</span>
+                  {isCustomEBC && (
+                    <button onClick={() => resetEBC(g.id)} title="Resetar EBC"
+                      style={{ background: 'none', border: 'none', color: T.amber, cursor: 'pointer', fontFamily: T.mono, fontSize: 8, padding: 0, lineHeight: 1 }}>↺</button>
+                  )}
+                </div>
+                <NumInput value={ebcVal} min={1} max={2000} step={5} onChange={v => updEBC(g.id, v)} small />
               </div>
-              <span style={{ fontFamily: T.mono, color: tm?.color || T.amber, fontSize: 8 }}>{pct.toFixed(0)}%</span>
-            </div>
-
-            {/* EBC */}
-            <div style={{ width: 72, flexShrink: 0 }}>
-              <div style={{ ...FIELD_LABEL, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>EBC</span>
-                {isCustomEBC && (
-                  <button onClick={() => resetEBC(g.id)} title="Resetar EBC"
-                    style={{ background: 'none', border: 'none', color: T.amber, cursor: 'pointer', fontFamily: T.mono, fontSize: 8, padding: 0, lineHeight: 1 }}>↺</button>
-                )}
+              <div style={{ flex: 1 }}>
+                <div style={FIELD_LABEL}>Kg</div>
+                <NumInput value={g.kg} unit="kg" min={0.05} max={50} step={0.1} onChange={v => updKg(g.id, v)} small />
               </div>
-              <NumInput value={ebcVal} min={1} max={2000} step={5} onChange={v => updEBC(g.id, v)} small />
+              <button onClick={() => remGrain(g.id)} style={DEL_BTN} title="Remover">✕</button>
             </div>
-
-            {/* Kg */}
-            <div style={{ width: 76, flexShrink: 0 }}>
-              <div style={FIELD_LABEL}>Kg</div>
-              <NumInput value={g.kg} unit="kg" min={0.05} max={50} step={0.1} onChange={v => updKg(g.id, v)} small />
-            </div>
-
-            {/* Excluir */}
-            <button onClick={() => remGrain(g.id)} style={DEL_BTN} title="Remover">✕</button>
           </div>
         );
       })}
