@@ -21,3 +21,21 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
 }
+
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+
+  body > * { visibility: hidden; }
+
+  #print-recipe {
+    display: block !important;
+    visibility: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+  }
+
+  #print-recipe * { visibility: visible; }
+}

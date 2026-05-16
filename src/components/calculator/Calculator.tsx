@@ -15,6 +15,7 @@ import { WaterPanel } from './WaterPanel';
 import { HitTarget } from './HitTarget';
 import { RecipePicker } from './RecipePicker';
 import { ScaledRecipe } from '@/data/recipes';
+import { PrintRecipe } from '@/components/layout/PrintRecipe';
 
 interface CalculatorProps {
   onOpenEquip: () => void;
@@ -55,6 +56,24 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const printBtn = (
+    <button
+      onClick={() => window.print()}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+        width: '100%', padding: '11px 0', borderRadius: 10,
+        background: 'none', border: `1.5px solid ${T.b2}`,
+        color: T.inkMuted, cursor: 'pointer',
+        fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
+        transition: 'border-color .2s, color .2s',
+      }}
+      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = T.amber; (e.currentTarget as HTMLButtonElement).style.color = T.amber; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = T.b2; (e.currentTarget as HTMLButtonElement).style.color = T.inkMuted; }}
+    >
+      📄 Exportar Ficha / Compartilhar
+    </button>
+  );
+
   const leftPanel = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Estilo alvo */}
@@ -80,6 +99,8 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
       </div>
 
       <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
+
+      {printBtn}
 
       {/* Equipamento */}
       <div style={{ ...card, background: 'rgba(254,247,232,0.85)', borderColor: `${T.amber}44` }}>
@@ -137,15 +158,24 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
           )}
         </div>
         <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
+        <div style={{ marginBottom: 20 }}>{printBtn}</div>
         {rightPanel}
+        <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
+          grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
+          totalKg={totalKg} boilOG={boilOG} />
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: 28, alignItems: 'start' }}>
-      <div style={{ position: 'sticky', top: 88 }}>{leftPanel}</div>
-      <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
-    </div>
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: 28, alignItems: 'start' }}>
+        <div style={{ position: 'sticky', top: 88 }}>{leftPanel}</div>
+        <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
+      </div>
+      <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
+        grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
+        totalKg={totalKg} boilOG={boilOG} />
+    </>
   );
 }
