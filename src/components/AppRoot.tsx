@@ -34,7 +34,7 @@ function AppInner() {
         />
       )}
       <Header mobile={mobile} onOpenEquip={() => setEquipOpen(true)} />
-      <main style={{ padding: mobile ? '14px 14px' : '28px 36px', maxWidth: 1280, margin: '0 auto' }}>
+      <main style={{ padding: mobile ? '16px 14px' : '32px 40px', maxWidth: 1320, margin: '0 auto' }}>
         {activeTab === 'calculator'  && <Calculator onOpenEquip={() => setEquipOpen(true)} />}
         {activeTab === 'references'  && <References />}
         {activeTab === 'styles'      && <StyleGuide />}

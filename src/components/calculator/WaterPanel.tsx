@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { WaterCalc } from '@/lib/types';
 
 interface WaterPanelProps {
@@ -16,7 +16,7 @@ export function WaterPanel({ waterCalc, totalGrainKg }: WaterPanelProps) {
     ["🍺 Pré-fervura",      `${waterCalc.preBoil.toFixed(1)} L`,   T.hop  ],
   ];
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 18 }}>
+    <div style={{ ...card }}>
       <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 12 }}>💧 Volumes de Água</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
         {items.map(([l, v, c]) => (

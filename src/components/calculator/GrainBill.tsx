@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { GrainEntry } from '@/lib/types';
 import { MALTS_DB, MALT_TYPE } from '@/data/malts';
 import { NumInput } from '@/components/ui/NumInput';
@@ -13,36 +13,71 @@ interface GrainBillProps {
   totalKg: number;
 }
 
+const defaultEBC = (maltId: number) => MALTS_DB.find(x => x.id === maltId)?.ebc ?? 3;
+
 export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
   const [newMaltId, setNewMaltId] = useState(1);
+  const [newEBC, setNewEBC] = useState(() => defaultEBC(1));
 
-  const addGrain    = () => setGrains(g => [...g, { id: Date.now(), maltId: newMaltId, kg: 1.0 }]);
+  const handleMaltChange = (id: number) => {
+    setNewMaltId(id);
+    setNewEBC(defaultEBC(id));
+  };
+
+  const addGrain = () => {
+    const m = MALTS_DB.find(x => x.id === newMaltId);
+    const ebcOverride = m && newEBC !== m.ebc ? newEBC : undefined;
+    setGrains(g => [...g, { id: Date.now(), maltId: newMaltId, kg: 1.0, ebc: ebcOverride }]);
+  };
+
   const remGrain    = (id: number) => setGrains(g => g.filter(x => x.id !== id));
   const updKg       = (id: number, kg: number) => setGrains(g => g.map(x => x.id === id ? { ...x, kg } : x));
   const updEBC      = (id: number, ebc: number) => setGrains(g => g.map(x => x.id === id ? { ...x, ebc } : x));
 
-  const sel = { background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 6, color: T.ink, padding: '7px 10px', fontSize: 12, fontFamily: T.body, width: 'auto', outline: 'none', cursor: 'pointer', maxWidth: 190 };
-  const addBtn = { background: T.amber, border: 'none', color: 'white', padding: '9px 14px', borderRadius: 7, cursor: 'pointer', fontFamily: T.mono, fontWeight: 500, fontSize: 11, letterSpacing: .3, whiteSpace: 'nowrap' as const, flexShrink: 0 };
-  const remBtn = { background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted, borderRadius: 6, padding: '5px 9px', cursor: 'pointer', fontFamily: T.mono, fontSize: 12, flexShrink: 0, lineHeight: 1 };
+  const sel = {
+    background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 8,
+    color: T.ink, padding: '8px 10px', fontSize: 12, fontFamily: T.body,
+    outline: 'none', cursor: 'pointer', flex: 1, minWidth: 0,
+  };
+  const addBtn = {
+    background: T.amber, border: 'none', color: 'white',
+    padding: '9px 16px', borderRadius: 9, cursor: 'pointer',
+    fontFamily: T.mono, fontWeight: 500, fontSize: 11, letterSpacing: .3,
+    whiteSpace: 'nowrap' as const, flexShrink: 0,
+    boxShadow: '0 2px 8px rgba(184,114,16,.3)',
+  };
+  const remBtn = {
+    background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted,
+    borderRadius: 8, padding: '5px 9px', cursor: 'pointer',
+    fontFamily: T.mono, fontSize: 12, flexShrink: 0, lineHeight: 1,
+  };
 
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, marginBottom: 18, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+    <div style={{ ...card }}>
       <SectionHead
         title="🌾 Maltes"
         info={totalKg > 0 ? `${totalKg.toFixed(2)} kg` : ''}
-        controls={<>
-          <select value={newMaltId} onChange={e => setNewMaltId(Number(e.target.value))} style={sel}>
-            {(['base', 'crystal', 'roasted', 'adjunct'] as const).map(t => (
-              <optgroup key={t} label={MALT_TYPE[t].label}>
-                {MALTS_DB.filter(m => m.type === t).map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-              </optgroup>
-            ))}
-          </select>
-          <button onClick={addGrain} style={addBtn}>+ Malte</button>
-        </>}
+        controls={
+          <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', flexWrap: 'wrap', width: '100%' }}>
+            <select value={newMaltId} onChange={e => handleMaltChange(Number(e.target.value))} style={sel}>
+              {(['base', 'crystal', 'roasted', 'adjunct'] as const).map(t => (
+                <optgroup key={t} label={MALT_TYPE[t].label}>
+                  {MALTS_DB.filter(m => m.type === t).map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                </optgroup>
+              ))}
+            </select>
+            <div style={{ flexShrink: 0 }}>
+              <div style={{ fontFamily: T.mono, color: T.inkDim, fontSize: 8, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 3 }}>EBC</div>
+              <div style={{ width: 64 }}>
+                <NumInput value={newEBC} min={1} max={2000} step={5} onChange={setNewEBC} small />
+              </div>
+            </div>
+            <button onClick={addGrain} style={addBtn}>+ Malte</button>
+          </div>
+        }
       />
       {grains.length === 0 && (
-        <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkDim, fontSize: 13, textAlign: 'center', padding: '16px 0' }}>
+        <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkDim, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>
           Adicione maltes para calcular OG, cor e corpo.
         </div>
       )}
@@ -52,26 +87,32 @@ export function GrainBill({ grains, setGrains, totalKg }: GrainBillProps) {
         const pct = totalKg > 0 ? (g.kg / totalKg * 100) : 0;
         const ebcVal = g.ebc ?? m?.ebc ?? 0;
         return (
-          <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 10px', background: tm?.bg || T.bgRow, borderRadius: 8, border: `1px solid ${T.b1}`, marginBottom: 6 }}>
+          <div key={g.id} style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 12px',
+            background: tm?.bg || T.bgRow,
+            borderRadius: 10, border: `1px solid ${T.b1}`,
+            marginBottom: 6,
+          }}>
             <div style={{ width: 3, alignSelf: 'stretch', minHeight: 32, borderRadius: 2, background: tm?.color || T.b2, flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                 <span style={{ fontFamily: T.body, color: T.ink, fontSize: 13, fontWeight: 600 }}>{m?.name}</span>
                 <Pill color={tm?.color || T.inkMuted}>{tm?.label}</Pill>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
                 <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9 }}>EBC</span>
-                <div style={{ width: 52 }}>
+                <div style={{ width: 56 }}>
                   <NumInput value={ebcVal} min={1} max={2000} step={5} onChange={v => updEBC(g.id, v)} small />
                 </div>
                 {g.ebc !== undefined && g.ebc !== m?.ebc && (
                   <button
                     onClick={() => setGrains(gs => gs.map(x => x.id === g.id ? { ...x, ebc: undefined } : x))}
-                    style={{ background: 'none', border: 'none', color: T.inkDim, fontSize: 8, cursor: 'pointer', fontFamily: T.mono, padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', color: T.inkDim, fontSize: 9, cursor: 'pointer', fontFamily: T.mono, padding: '0 2px' }}
                     title="Resetar EBC"
                   >↺</button>
                 )}
-                <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginLeft: 4 }}>· GU {m?.gu}</span>
+                <span style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, marginLeft: 2 }}>· GU {m?.gu}</span>
               </div>
             </div>
             <div style={{ width: 36, flexShrink: 0 }}>

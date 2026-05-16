@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { GrainEntry, HopEntry, BJCPStyle } from '@/lib/types';
 import { midOf } from '@/lib/brewing-math';
 import { NumInput } from '@/components/ui/NumInput';
@@ -53,7 +53,7 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
 
   if (mobile) {
     return (
-      <div style={{ background: T.bgCard, borderRadius: 12, border: `1.5px dashed ${T.b2}`, padding: 14, marginBottom: 12 }}>
+      <div style={{ ...card, border: `1.5px dashed ${T.b2}`, marginBottom: 12 }}>
         <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 12 }}>🎯 Atingir Meta</div>
         <div style={{ background: T.bgAmber, borderRadius: 9, padding: 12, border: `1px solid ${T.b2}`, marginBottom: 10 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
@@ -87,7 +87,7 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
   }
 
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1.5px dashed ${T.b2}`, padding: 16, marginBottom: 12 }}>
+    <div style={{ ...card, border: `1.5px dashed ${T.b2}`, marginBottom: 12 }}>
       <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 14 }}>🎯 Atingir Meta</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
         <div style={{ background: T.bgAmber, borderRadius: 9, padding: 12, border: `1px solid ${T.b2}` }}>
