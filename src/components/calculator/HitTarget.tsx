@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { GrainEntry, HopEntry, BJCPStyle } from '@/lib/types';
 import { midOf } from '@/lib/brewing-math';
 import { NumInput } from '@/components/ui/NumInput';
@@ -23,6 +23,9 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
   const mobile = vw < 768;
   const [abvT, setAbvT] = useState(0);
   const [ibuT, setIbuT] = useState(0);
+
+  const curAbv = og > 1.001 ? ((og - 1) * (avgAtten / 100) * 131.25).toFixed(1) : null;
+  const curIbu = ibu > 0.5  ? ibu.toFixed(0) : null;
 
   const hitCenter = () => {
     if (!style) return;
@@ -53,7 +56,7 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
 
   if (mobile) {
     return (
-      <div style={{ background: T.bgCard, borderRadius: 12, border: `1.5px dashed ${T.b2}`, padding: 14, marginBottom: 12 }}>
+      <div style={{ ...card, border: `1.5px dashed ${T.b2}`, marginBottom: 12 }}>
         <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 12 }}>🎯 Atingir Meta</div>
         <div style={{ background: T.bgAmber, borderRadius: 9, padding: 12, border: `1px solid ${T.b2}`, marginBottom: 10 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
@@ -70,13 +73,17 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <div style={{ background: T.bgMuted, borderRadius: 9, padding: 10, border: `1px solid ${T.b1}` }}>
-            <div style={{ fontFamily: T.mono, color: T.info, fontSize: 9, fontWeight: 500, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 8 }}>🍺 ABV alvo</div>
+            <div style={{ fontFamily: T.mono, color: T.info, fontSize: 9, fontWeight: 500, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 8 }}>
+              🍺 ABV alvo{curAbv && <span style={{ color: T.inkDim, fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}> ({curAbv}%)</span>}
+            </div>
             <NumInput value={abvT} unit="%" min={0.5} max={20} step={0.1} onChange={v => setAbvT(v)} small />
             {style && <div style={{ fontFamily: T.mono, color: T.inkDim, fontSize: 9, marginTop: 5 }}>faixa: {style.abv[0]}–{style.abv[1]}%</div>}
             <button onClick={applyABV} style={{ ...btn(T.info), width: '100%', marginTop: 8, fontSize: 11, padding: '7px 10px' }}>⚡ Aplicar</button>
           </div>
           <div style={{ background: T.bgMuted, borderRadius: 9, padding: 10, border: `1px solid ${T.b1}` }}>
-            <div style={{ fontFamily: T.mono, color: T.hop, fontSize: 9, fontWeight: 500, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 8 }}>🌿 IBU alvo</div>
+            <div style={{ fontFamily: T.mono, color: T.hop, fontSize: 9, fontWeight: 500, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 8 }}>
+              🌿 IBU alvo{curIbu && <span style={{ color: T.inkDim, fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}> ({curIbu})</span>}
+            </div>
             <NumInput value={ibuT} unit="IBU" min={1} max={300} step={1} onChange={v => setIbuT(v)} small />
             {style && <div style={{ fontFamily: T.mono, color: T.inkDim, fontSize: 9, marginTop: 5 }}>faixa: {style.ibu[0]}–{style.ibu[1]}</div>}
             <button onClick={applyIBU} style={{ ...btn(T.hop), width: '100%', marginTop: 8, fontSize: 11, padding: '7px 10px' }}>⚡ Aplicar</button>
@@ -87,7 +94,7 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
   }
 
   return (
-    <div style={{ background: T.bgCard, borderRadius: 12, border: `1.5px dashed ${T.b2}`, padding: 16, marginBottom: 12 }}>
+    <div style={{ ...card, border: `1.5px dashed ${T.b2}`, marginBottom: 12 }}>
       <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 14 }}>🎯 Atingir Meta</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
         <div style={{ background: T.bgAmber, borderRadius: 9, padding: 12, border: `1px solid ${T.b2}` }}>
@@ -99,7 +106,9 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
           <button onClick={hitCenter} style={{ ...btn(T.amber), width: '100%' }}>⚡ Centralizar</button>
         </div>
         <div style={{ background: T.bgMuted, borderRadius: 9, padding: 12, border: `1px solid ${T.b1}` }}>
-          <div style={{ fontFamily: T.mono, color: T.info, fontSize: 9, fontWeight: 500, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>Meta de ABV</div>
+          <div style={{ fontFamily: T.mono, color: T.info, fontSize: 9, fontWeight: 500, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>
+            Meta de ABV{curAbv && <span style={{ color: T.inkDim, fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}> ({curAbv}%)</span>}
+          </div>
           <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMuted, fontSize: 11, lineHeight: 1.5, marginBottom: 8 }}>Escala o grist para atingir o álcool desejado.</div>
           <SField label="ABV desejado">
             <NumInput value={abvT} unit="%" min={0.5} max={20} step={0.1} onChange={v => setAbvT(v)} small />
@@ -108,7 +117,9 @@ export function HitTarget({ style, og, ibu, avgAtten, grains, setGrains, hops, s
           <button onClick={applyABV} style={{ ...btn(T.info), width: '100%', marginTop: 10 }}>⚡ Aplicar ABV</button>
         </div>
         <div style={{ background: T.bgMuted, borderRadius: 9, padding: 12, border: `1px solid ${T.b1}` }}>
-          <div style={{ fontFamily: T.mono, color: T.hop, fontSize: 9, fontWeight: 500, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>Meta de IBU</div>
+          <div style={{ fontFamily: T.mono, color: T.hop, fontSize: 9, fontWeight: 500, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>
+            Meta de IBU{curIbu && <span style={{ color: T.inkDim, fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}> ({curIbu})</span>}
+          </div>
           <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMuted, fontSize: 11, lineHeight: 1.5, marginBottom: 8 }}>Escala lúpulos proporcionalmente ao IBU alvo.</div>
           <SField label="IBU desejado">
             <NumInput value={ibuT} unit="IBU" min={1} max={300} step={1} onChange={v => setIbuT(v)} small />

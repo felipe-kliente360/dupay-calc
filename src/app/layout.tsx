@@ -1,10 +1,26 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next'
+import './globals.css'
+
+export const viewport: Viewport = {
+  themeColor: '#B87210',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
-  title: "Dupay Cervecería — Calculadora de Brassagem",
-  description: "Ferramenta de brassagem para homebrewers. Calcule OG, IBU, SRM, ABV e volumes de água.",
-};
+  title: 'Dupay — Calculadora de Brassagem',
+  description: 'Calculadora de brassagem para homebrewers. Calcule OG, IBU, SRM, ABV e volumes de água.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'Dupay',
+    statusBarStyle: 'black-translucent',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,5 +35,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>{children}</body>
     </html>
-  );
+  )
 }

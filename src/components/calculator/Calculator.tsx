@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { useApp } from '@/lib/context';
 import { BJCP_STYLES } from '@/data/bjcp-styles';
 import { YEASTS_DB } from '@/data/yeasts';
@@ -12,9 +12,12 @@ import { GrainBill } from './GrainBill';
 import { HopSchedule } from './HopSchedule';
 import { YeastPicker } from './YeastPicker';
 import { WaterPanel } from './WaterPanel';
+import { WaterChem } from './WaterChem';
 import { HitTarget } from './HitTarget';
 import { RecipePicker } from './RecipePicker';
 import { ScaledRecipe } from '@/data/recipes';
+import { PrintRecipe } from '@/components/layout/PrintRecipe';
+import { styleToTarget } from '@/data/water-profiles';
 
 interface CalculatorProps {
   onOpenEquip: () => void;
@@ -23,7 +26,7 @@ interface CalculatorProps {
 export function Calculator({ onOpenEquip }: CalculatorProps) {
   const vw = useWidth();
   const mobile = vw < 900;
-  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip } = useApp();
+  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip, waterSource, setWaterSource, salts, setSalts, recipeName, setRecipeName, nameError } = useApp();
 
   const style    = BJCP_STYLES.find(s => s.id === styleId);
   const yeast    = YEASTS_DB.find(y => y.id === yeastId);
@@ -41,7 +44,11 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   const abv      = calcABV(og, fg);
   const waterCalc = calcWater(equip, totalKg);
 
-  const sel = { background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 6, color: T.ink, padding: '9px 12px', fontSize: 13, fontFamily: T.body, width: '100%', outline: 'none', cursor: 'pointer' };
+  const sel = {
+    background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 8,
+    color: T.ink, padding: '10px 12px', fontSize: 13, fontFamily: T.body,
+    width: '100%', outline: 'none', cursor: 'pointer',
+  };
 
   const applyRecipe = (scaled: ScaledRecipe) => {
     setGrains(scaled.grains);
@@ -51,18 +58,56 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const nameInput = (
+    <div style={{ ...card }}>
+      <div style={{
+        fontFamily: T.mono, fontSize: 8, color: nameError ? T.ng : T.inkMuted,
+        letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6,
+        transition: 'color .2s',
+      }}>
+        {nameError ? '⚠ Informe o nome antes de exportar' : 'Nome da Receita'}
+      </div>
+      <input
+        id="recipe-name-input"
+        type="text"
+        value={recipeName}
+        onChange={e => setRecipeName(e.target.value)}
+        placeholder="Minha IPA Cítrica..."
+        className={nameError ? 'shake' : ''}
+        style={{
+          fontFamily: T.serif,
+          fontSize: mobile ? 22 : 28,
+          fontWeight: 700,
+          color: T.ink,
+          background: 'transparent',
+          border: 'none',
+          borderBottom: `2.5px solid ${nameError ? T.ng : T.b2}`,
+          outline: 'none',
+          width: '100%',
+          padding: '4px 0 6px',
+          letterSpacing: -0.5,
+          transition: 'border-color .2s',
+          caretColor: T.amber,
+        }}
+        onFocus={e => { e.currentTarget.style.borderBottomColor = T.amber; }}
+        onBlur={e => { e.currentTarget.style.borderBottomColor = nameError ? T.ng : T.b2; }}
+      />
+    </div>
+  );
+
   const leftPanel = (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={{ background: T.bgCard, borderRadius: 12, border: `1px solid ${T.b1}`, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
-        <div style={{ fontFamily: T.serif, fontSize: 15, fontWeight: 700, color: T.ink, marginBottom: 10 }}>🍺 Estilo Alvo</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Estilo alvo */}
+      <div style={{ ...card }}>
+        <div style={{ fontFamily: T.serif, fontSize: 15, fontWeight: 700, color: T.ink, marginBottom: 12 }}>🍺 Estilo Alvo</div>
         <select value={styleId} onChange={e => setStyleId(e.target.value)} style={sel}>
           {BJCP_STYLES.map(s => <option key={s.id} value={s.id}>{s.id} – {s.name}</option>)}
         </select>
         {style && (
-          <div style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 12 }}>
             <div style={{ fontFamily: T.mono, color: T.inkMuted, fontSize: 9, letterSpacing: 1, marginBottom: 4, textTransform: 'uppercase' }}>{style.cat}</div>
-            <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMid, fontSize: 12, lineHeight: 1.6, marginBottom: 10 }}>{style.desc}</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+            <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMid, fontSize: 12, lineHeight: 1.6, marginBottom: 12 }}>{style.desc}</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               <Pill color={T.amber}>OG {style.og[0]}–{style.og[1]}</Pill>
               <Pill color={T.inkMuted}>FG {style.fg[0]}–{style.fg[1]}</Pill>
               <Pill color={T.ok}>IBU {style.ibu[0]}–{style.ibu[1]}</Pill>
@@ -73,18 +118,25 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
           </div>
         )}
       </div>
+
       <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
-      <div style={{ background: T.bgAmber, borderRadius: 10, border: `1px solid ${T.b1}`, padding: 12 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+
+      {/* Equipamento */}
+      <div style={{ ...card, background: 'rgba(254,247,232,0.85)', borderColor: `${T.amber}44` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontFamily: T.mono, color: T.amber, fontSize: 9, fontWeight: 500, letterSpacing: 1.5, textTransform: 'uppercase' }}>⚙ Equipamento</span>
-          <button onClick={onOpenEquip} style={{ background: 'none', border: `1px solid ${T.amber}55`, color: T.amber, borderRadius: 5, padding: '3px 8px', cursor: 'pointer', fontFamily: T.mono, fontSize: 10 }}>Editar</button>
+          <button onClick={onOpenEquip} style={{
+            background: 'none', border: `1px solid ${T.amber}55`, color: T.amber,
+            borderRadius: 7, padding: '4px 10px', cursor: 'pointer',
+            fontFamily: T.mono, fontSize: 10, letterSpacing: .3,
+          }}>Editar</button>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
           {[`${equip.batchL}L final`, `ef. ${equip.efficiency}%`, `fervura ${equip.boilMin}min`, `evap. ${equip.boiloffLh}L/h`, `morto ${equip.deadSpace}L`, `trub ${equip.trubLoss}L`].map((v, i) => (
             <div key={i} style={{ fontFamily: T.mono, color: T.inkMid, fontSize: 11 }}>{v}</div>
           ))}
         </div>
-        <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${T.b1}`, fontFamily: T.mono, color: T.inkMid, fontSize: 11 }}>
+        <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${T.b1}`, fontFamily: T.mono, color: T.inkMid, fontSize: 11 }}>
           Água total: <b style={{ color: T.amber }}>{waterCalc.totalWater.toFixed(1)} L</b>
           <span style={{ margin: '0 8px', color: T.inkDim }}>·</span>
           Pré-fervura: <b style={{ color: T.amber }}>{preBoil.toFixed(1)} L</b>
@@ -98,6 +150,12 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
       <GrainBill grains={grains} setGrains={setGrains} totalKg={totalKg} />
       <HopSchedule hops={hops} setHops={setHops} ibu={ibu} boilOG={boilOG} batchL={equip.batchL} />
       <YeastPicker yeastId={yeastId} setYeastId={setYeastId} customAtten={customAtten} setCustomAtten={setCustomAtten} avgAtten={avgAtten} og={og} />
+      <WaterChem
+        source={waterSource} setSource={setWaterSource}
+        salts={salts} setSalts={setSalts}
+        mashL={waterCalc.mashWater}
+        styleId={styleId} styleCat={style?.cat || ''}
+      />
       {mobile && <WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} />}
       <HitTarget style={style} og={og} ibu={ibu} avgAtten={avgAtten} grains={grains} setGrains={setGrains} hops={hops} setHops={setHops} />
     </div>
@@ -106,31 +164,48 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   if (mobile) {
     return (
       <div>
-        <div style={{ background: T.bgCard, borderRadius: 10, border: `1px solid ${T.b1}`, padding: 12, marginBottom: 12 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink }}>🍺 Estilo Alvo</div>
-            <button onClick={onOpenEquip} style={{ background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted, borderRadius: 5, padding: '3px 8px', cursor: 'pointer', fontFamily: T.mono, fontSize: 10 }}>⚙ Equip.</button>
+        {nameInput}
+        <div style={{ ...card }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <div style={{ fontFamily: T.serif, fontSize: 15, fontWeight: 700, color: T.ink }}>🍺 Estilo Alvo</div>
+            <button onClick={onOpenEquip} style={{
+              background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted,
+              borderRadius: 8, padding: '4px 10px', cursor: 'pointer', fontFamily: T.mono, fontSize: 10,
+            }}>⚙ Equip.</button>
           </div>
           <select value={styleId} onChange={e => setStyleId(e.target.value)} style={sel}>
             {BJCP_STYLES.map(s => <option key={s.id} value={s.id}>{s.id} – {s.name}</option>)}
           </select>
           {style && (
             <>
-              <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMid, fontSize: 12, lineHeight: 1.5, marginTop: 8 }}>{style.desc}</div>
+              <div style={{ fontFamily: T.body, fontStyle: 'italic', color: T.inkMid, fontSize: 12, lineHeight: 1.5, marginTop: 10 }}>{style.desc}</div>
               <RecipePicker styleId={styleId} equip={equip} onApply={applyRecipe} />
             </>
           )}
         </div>
         <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
         {rightPanel}
+        <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
+          grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
+          totalKg={totalKg} boilOG={boilOG} recipeName={recipeName}
+          waterSource={waterSource} salts={salts}
+          waterTarget={styleToTarget(styleId, style?.cat || '')} />
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 16, alignItems: 'start' }}>
-      <div style={{ position: 'sticky', top: 70 }}>{leftPanel}</div>
-      <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
-    </div>
+    <>
+      {nameInput}
+      <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: 28, alignItems: 'start' }}>
+        <div style={{ position: 'sticky', top: 88 }}>{leftPanel}</div>
+        <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
+      </div>
+      <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
+        grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
+        totalKg={totalKg} boilOG={boilOG} recipeName={recipeName}
+        waterSource={waterSource} salts={salts}
+        waterTarget={styleToTarget(styleId, style?.cat || '')} />
+    </>
   );
 }

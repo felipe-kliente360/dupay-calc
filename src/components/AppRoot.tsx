@@ -1,9 +1,9 @@
 'use client';
 import { T } from '@/lib/tokens';
-import { AppProvider, useApp, DEFAULT_EQUIP } from '@/lib/context';
-import { calcWater } from '@/lib/brewing-math';
+import { AppProvider, useApp } from '@/lib/context';
+import { calcWater, calcSRM, srmHex } from '@/lib/brewing-math';
 import { useWidth } from '@/hooks/useWidth';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { EquipModal } from '@/components/layout/EquipModal';
@@ -15,13 +15,16 @@ import { References } from '@/components/references/References';
 function AppInner() {
   const vw = useWidth();
   const mobile = vw < 640;
-  const { activeTab, equip, setEquip } = useApp();
+  const { activeTab, equip, setEquip, grains } = useApp();
   const [equipOpen, setEquipOpen] = useState(false);
 
   const waterCalcPreview = calcWater(equip, 3);
 
+  const srm = useMemo(() => calcSRM(grains, equip.batchL), [grains, equip.batchL]);
+  const dynBg = srm > 0.5 ? srmHex(srm) : T.bg;
+
   return (
-    <div style={{ minHeight: '100vh', background: T.bg, fontFamily: T.body, color: T.ink, paddingBottom: mobile ? 68 : 40 }}>
+    <div style={{ minHeight: '100vh', background: dynBg, fontFamily: T.body, color: T.ink, paddingBottom: mobile ? 68 : 40, transition: 'background 0.6s ease' }}>
       {equipOpen && (
         <EquipModal
           equip={equip}
@@ -31,7 +34,7 @@ function AppInner() {
         />
       )}
       <Header mobile={mobile} onOpenEquip={() => setEquipOpen(true)} />
-      <main style={{ padding: mobile ? '12px 12px' : '20px 28px', maxWidth: 1280, margin: '0 auto' }}>
+      <main style={{ padding: mobile ? '16px 14px' : '32px 40px', maxWidth: 1320, margin: '0 auto' }}>
         {activeTab === 'calculator'  && <Calculator onOpenEquip={() => setEquipOpen(true)} />}
         {activeTab === 'references'  && <References />}
         {activeTab === 'styles'      && <StyleGuide />}

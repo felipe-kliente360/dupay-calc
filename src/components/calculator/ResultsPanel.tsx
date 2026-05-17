@@ -1,5 +1,5 @@
 'use client';
-import { T } from '@/lib/tokens';
+import { T, card } from '@/lib/tokens';
 import { BJCPStyle } from '@/lib/types';
 import { inRange, srmHex } from '@/lib/brewing-math';
 import { Gauge } from '@/components/ui/Gauge';
@@ -18,7 +18,7 @@ export function ResultsPanel({ style, og, fg, ibu, abv, srm, ebc, cat = '' }: Re
   const score = checks.filter(Boolean).length;
 
   return (
-    <div style={{ background: T.bgCard, border: `1.5px solid ${allOk ? T.ok : T.b1}`, borderRadius: 12, padding: 16, boxShadow: allOk ? `0 0 0 3px ${T.ok}18` : 'none', transition: 'all .3s' }}>
+    <div style={{ ...card, border: `1.5px solid ${allOk ? T.ok : T.bGlass}`, boxShadow: allOk ? `0 0 0 3px ${T.ok}18, 0 4px 24px rgba(0,0,0,.07)` : card.boxShadow, transition: 'all .3s' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <div style={{ fontFamily: T.serif, fontSize: 14, fontWeight: 700, color: T.ink }}>Parâmetros da Receita</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
