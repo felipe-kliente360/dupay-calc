@@ -17,6 +17,7 @@ import { HitTarget } from './HitTarget';
 import { RecipePicker } from './RecipePicker';
 import { ScaledRecipe } from '@/data/recipes';
 import { PrintRecipe } from '@/components/layout/PrintRecipe';
+import { styleToTarget } from '@/data/water-profiles';
 
 interface CalculatorProps {
   onOpenEquip: () => void;
@@ -169,7 +170,9 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
         {rightPanel}
         <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
           grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
-          totalKg={totalKg} boilOG={boilOG} />
+          totalKg={totalKg} boilOG={boilOG}
+          waterSource={waterSource} salts={salts}
+          waterTarget={styleToTarget(styleId, style?.cat || '')} />
       </div>
     );
   }
@@ -182,7 +185,9 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
       </div>
       <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
         grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
-        totalKg={totalKg} boilOG={boilOG} />
+        totalKg={totalKg} boilOG={boilOG}
+        waterSource={waterSource} salts={salts}
+        waterTarget={styleToTarget(styleId, style?.cat || '')} />
     </>
   );
 }
