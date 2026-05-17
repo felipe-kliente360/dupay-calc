@@ -35,7 +35,7 @@ input[type="range"] {
 .shake { animation: shake 0.48s ease-in-out; }
 
 @media print {
-  @page { size: A4 portrait; margin: 9mm 10mm; }
+  @page { size: A4 portrait; margin: 0; }
 
   body > * { visibility: hidden; }
 
@@ -43,9 +43,12 @@ input[type="range"] {
     display: block !important;
     visibility: visible;
     position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
+    padding: 9mm 10mm;
+    box-sizing: border-box;
     background: white;
     overflow: hidden;
   }

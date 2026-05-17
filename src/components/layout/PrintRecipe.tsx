@@ -106,9 +106,9 @@ export function PrintRecipe({
   return (
     <div id="print-recipe" style={{ display: 'none' }}>
 
-      {/* Flex column — preenche exatamente a área imprimível do A4 (297mm − 9mm×2) */}
+      {/* Flex column — 100% resolve contra 297mm-18mm padding = 279mm de área útil */}
       <div style={{
-        width: '100%', height: '279mm',
+        width: '100%', height: '100%', overflow: 'hidden',
         fontFamily: lora, color: C.ink, fontSize: 9, lineHeight: 1.4,
         display: 'flex', flexDirection: 'column', gap: 6,
       }}>
