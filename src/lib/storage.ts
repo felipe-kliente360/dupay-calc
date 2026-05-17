@@ -1,8 +1,9 @@
-import { SavedRecipe, EquipProfile } from './types';
+import { SavedRecipe, EquipProfile, WaterSource, SaltAdditions } from './types';
 
 const KEYS = {
   recipes: 'dupay:recipes',
   equip:   'dupay:equip',
+  water:   'dupay:water',
 } as const;
 
 export const loadEquip = (defaults: EquipProfile): EquipProfile => {
@@ -31,4 +32,15 @@ export const saveRecipe = (recipe: SavedRecipe): void => {
 export const deleteRecipe = (id: string): void => {
   const all = loadRecipes().filter(r => r.id !== id);
   localStorage.setItem(KEYS.recipes, JSON.stringify(all));
+};
+
+export const loadWater = (): { source: WaterSource; salts: SaltAdditions } | null => {
+  try {
+    const raw = localStorage.getItem(KEYS.water);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
+
+export const saveWater = (source: WaterSource, salts: SaltAdditions): void => {
+  localStorage.setItem(KEYS.water, JSON.stringify({ source, salts }));
 };

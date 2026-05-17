@@ -120,3 +120,27 @@ export interface SavedRecipe {
 export type TabId = 'calculator' | 'references' | 'styles' | 'insumos';
 
 export type GlassType = 'pint' | 'pilsner' | 'weizen' | 'goblet' | 'tulip';
+
+export interface WaterSource {
+  ca: number; mg: number; na: number;
+  hco3: number; so4: number; cl: number;
+  ph: number;
+}
+
+export interface SaltAdditions {
+  gypsum: number;  // g — CaSO4·2H2O
+  cacl2:  number;  // g — CaCl2·2H2O
+  epsom:  number;  // g — MgSO4·7H2O
+  nacl:   number;  // g — NaCl
+  nahco3: number;  // g — NaHCO3
+}
+
+export interface WaterTarget {
+  name: string;
+  ca:   [number, number];
+  mg:   [number, number];
+  na:   [number, number];
+  hco3: [number, number];
+  so4:  [number, number];
+  cl:   [number, number];
+}

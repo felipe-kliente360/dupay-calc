@@ -12,6 +12,7 @@ import { GrainBill } from './GrainBill';
 import { HopSchedule } from './HopSchedule';
 import { YeastPicker } from './YeastPicker';
 import { WaterPanel } from './WaterPanel';
+import { WaterChem } from './WaterChem';
 import { HitTarget } from './HitTarget';
 import { RecipePicker } from './RecipePicker';
 import { ScaledRecipe } from '@/data/recipes';
@@ -24,7 +25,7 @@ interface CalculatorProps {
 export function Calculator({ onOpenEquip }: CalculatorProps) {
   const vw = useWidth();
   const mobile = vw < 900;
-  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip } = useApp();
+  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip, waterSource, setWaterSource, salts, setSalts } = useApp();
 
   const style    = BJCP_STYLES.find(s => s.id === styleId);
   const yeast    = YEASTS_DB.find(y => y.id === yeastId);
@@ -131,6 +132,12 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
       <GrainBill grains={grains} setGrains={setGrains} totalKg={totalKg} />
       <HopSchedule hops={hops} setHops={setHops} ibu={ibu} boilOG={boilOG} batchL={equip.batchL} />
       <YeastPicker yeastId={yeastId} setYeastId={setYeastId} customAtten={customAtten} setCustomAtten={setCustomAtten} avgAtten={avgAtten} og={og} />
+      <WaterChem
+        source={waterSource} setSource={setWaterSource}
+        salts={salts} setSalts={setSalts}
+        mashL={waterCalc.mashWater}
+        styleId={styleId} styleCat={style?.cat || ''}
+      />
       {mobile && <WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} />}
       <HitTarget style={style} og={og} ibu={ibu} avgAtten={avgAtten} grains={grains} setGrains={setGrains} hops={hops} setHops={setHops} />
     </div>

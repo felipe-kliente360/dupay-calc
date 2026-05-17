@@ -1,7 +1,10 @@
 'use client';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { GrainEntry, HopEntry, EquipProfile, SavedRecipe, TabId } from './types';
-import { loadEquip, saveEquip, loadRecipes, saveRecipe as persistRecipe, deleteRecipe as removeRecipe } from './storage';
+import { GrainEntry, HopEntry, EquipProfile, SavedRecipe, TabId, WaterSource, SaltAdditions } from './types';
+import { loadEquip, saveEquip, loadRecipes, saveRecipe as persistRecipe, deleteRecipe as removeRecipe, loadWater, saveWater } from './storage';
+
+export const DEFAULT_WATER: WaterSource = { ca:0, mg:0, na:0, hco3:0, so4:0, cl:0, ph:7.0 };
+export const DEFAULT_SALTS: SaltAdditions = { gypsum:0, cacl2:0, epsom:0, nacl:0, nahco3:0 };
 
 export const DEFAULT_EQUIP: EquipProfile = {
   batchL:        20,
@@ -26,6 +29,10 @@ interface AppCtx {
   setCustomAtten: (a: number | null) => void;
   equip: EquipProfile;
   setEquip: (e: EquipProfile) => void;
+  waterSource: WaterSource;
+  setWaterSource: (w: WaterSource) => void;
+  salts: SaltAdditions;
+  setSalts: (s: SaltAdditions) => void;
   activeTab: TabId;
   setActiveTab: (t: TabId) => void;
   savedRecipes: SavedRecipe[];
@@ -43,17 +50,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [yeastId, setYeastId]           = useState(101);
   const [customAtten, setCustomAtten]   = useState<number | null>(null);
   const [equip, setEquipState]          = useState<EquipProfile>(DEFAULT_EQUIP);
+  const [waterSource, setWaterState]    = useState<WaterSource>(DEFAULT_WATER);
+  const [salts, setSaltsState]          = useState<SaltAdditions>(DEFAULT_SALTS);
   const [activeTab, setActiveTab]       = useState<TabId>('calculator');
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
 
   useEffect(() => {
     setEquipState(loadEquip(DEFAULT_EQUIP));
     setSavedRecipes(loadRecipes());
+    const w = loadWater();
+    if (w) { setWaterState(w.source); setSaltsState(w.salts); }
   }, []);
 
-  const setEquip = (e: EquipProfile) => {
-    setEquipState(e);
-    saveEquip(e);
+  const setEquip = (e: EquipProfile) => { setEquipState(e); saveEquip(e); };
+
+  const setWaterSource = (w: WaterSource) => {
+    setWaterState(w);
+    saveWater(w, salts);
+  };
+  const setSalts = (s: SaltAdditions) => {
+    setSaltsState(s);
+    saveWater(waterSource, s);
   };
 
   const saveCurrentRecipe = (name: string) => {
@@ -96,6 +113,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       yeastId, setYeastId,
       customAtten, setCustomAtten,
       equip, setEquip,
+      waterSource, setWaterSource,
+      salts, setSalts,
       activeTab, setActiveTab,
       savedRecipes, saveCurrentRecipe, loadSavedRecipe, deleteSavedRecipe,
     }}>
