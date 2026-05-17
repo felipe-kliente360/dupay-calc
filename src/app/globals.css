@@ -51,14 +51,16 @@ input[type="range"] {
 
   body > * { visibility: hidden; }
 
-  /* Dimensions and padding are controlled entirely via inline style
-     on the inner grid div — no box-sizing ambiguity in print CSS. */
   #print-recipe {
     display: block !important;
     visibility: visible;
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
     background: white;
+    overflow: hidden;
   }
 
   #print-recipe * { visibility: visible; }
