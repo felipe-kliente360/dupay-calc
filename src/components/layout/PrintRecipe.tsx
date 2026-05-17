@@ -101,16 +101,20 @@ export function PrintRecipe({
   return (
     <div id="print-recipe" style={{ display: 'none' }}>
       {/*
-        Todas as 7 linhas com mm explícito — zero 1fr.
-        18+10+54+47+90+34+8 = 261mm + 6×3mm gaps = 279mm exatos.
-        Sem 1fr, o Chrome não precisa resolver alturas relativas.
+        Dimensões TODAS inline — box-sizing inline é sempre respeitado.
+        width/height/padding no próprio div, não no CSS @media print.
+        17+9+52+45+82+30+6 = 241mm + 6×3mm = 259mm de conteúdo.
+        Área útil (297-9-9=279mm) − 259mm = 20mm de margem segura
+        para o rodapé URL/data que o Chrome injeta na página.
       */}
       <div style={{
-        width: '100%',
-        height: '279mm',
+        width: '210mm',
+        height: '297mm',
+        padding: '9mm 10mm',
+        boxSizing: 'border-box',
         overflow: 'hidden',
         display: 'grid',
-        gridTemplateRows: '18mm 10mm 54mm 47mm 90mm 34mm 8mm',
+        gridTemplateRows: '17mm 9mm 52mm 45mm 82mm 30mm 6mm',
         gap: '3mm',
         fontFamily: lora, color: C.ink, fontSize: 9, lineHeight: 1.4,
       }}>

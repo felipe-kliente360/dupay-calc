@@ -46,20 +46,19 @@ input[type="range"] {
 @media print {
   @page { size: A4 portrait; margin: 0; }
 
+  /* Prevent body overflow from shifting the fixed #print-recipe */
+  html, body { overflow: hidden; }
+
   body > * { visibility: hidden; }
 
+  /* Dimensions and padding are controlled entirely via inline style
+     on the inner grid div — no box-sizing ambiguity in print CSS. */
   #print-recipe {
     display: block !important;
     visibility: visible;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 210mm;
-    height: 297mm;
-    padding: 9mm 10mm;
-    box-sizing: border-box;
+    inset: 0;
     background: white;
-    overflow: hidden;
   }
 
   #print-recipe * { visibility: visible; }
