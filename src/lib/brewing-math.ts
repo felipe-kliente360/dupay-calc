@@ -101,14 +101,15 @@ export function autoWaterSalts(
 }
 
 export const srmHex = (srm: number): string => {
+  // Above SRM ~40 beer is visually black; background reflects this progression.
   const map: [number, string][] = [
     [1,'#FFE699'],[2,'#FFD878'],[3,'#FFCA5A'],[4,'#FFBF42'],[5,'#FBB123'],
     [6,'#F8A600'],[7,'#F39C00'],[8,'#EA8F00'],[9,'#E58500'],[10,'#DE7C00'],
     [11,'#D77200'],[12,'#CF6900'],[13,'#CB6100'],[14,'#C35900'],[15,'#BB5100'],
     [16,'#B54C00'],[17,'#B04500'],[18,'#A63E00'],[20,'#9B3200'],[24,'#8E2900'],
-    [29,'#7C1D00'],[35,'#6B1100'],[40,'#4E0900'],
+    [29,'#7C1D00'],[35,'#4A0C00'],[40,'#260500'],[45,'#120100'],[50,'#070000'],
   ];
-  const v = Math.min(40, Math.max(1, Math.round(srm)));
+  const v = Math.min(50, Math.max(1, Math.round(srm)));
   let closest = map[0];
   map.forEach(([k, h]) => { if (Math.abs(k - v) < Math.abs(closest[0] - v)) closest = [k, h]; });
   return closest[1];

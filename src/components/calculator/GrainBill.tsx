@@ -18,7 +18,7 @@ const defaultEBC = (id: number) => MALTS_DB.find(x => x.id === id)?.ebc ?? 3;
 const SEL: React.CSSProperties = {
   background: T.bgInput, border: `1.5px solid ${T.b1}`, borderRadius: 8,
   color: T.ink, padding: '9px 10px', fontSize: 12, fontFamily: T.body,
-  outline: 'none', cursor: 'pointer', width: '100%', height: 36,
+  outline: 'none', cursor: 'pointer', width: '100%',
 };
 const FIELD_LABEL: React.CSSProperties = {
   fontFamily: T.mono, color: T.inkDim, fontSize: 8,

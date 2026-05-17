@@ -36,7 +36,7 @@ export function NumInput({ value, onChange, min = 0, max, step = 1, unit, small 
   };
 
   const fs = small ? 12 : 14;
-  const py = small ? '5px' : '8px';
+  const py = small ? '7px' : '9px';
 
   return (
     <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
