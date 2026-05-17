@@ -35,7 +35,7 @@ input[type="range"] {
 .shake { animation: shake 0.48s ease-in-out; }
 
 @media print {
-  @page { size: A4 portrait; margin: 10mm 12mm; }
+  @page { size: A4 portrait; margin: 9mm 10mm; }
 
   body > * { visibility: hidden; }
 
@@ -43,10 +43,10 @@ input[type="range"] {
     display: block !important;
     visibility: visible;
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     background: white;
+    overflow: hidden;
   }
 
   #print-recipe * { visibility: visible; }
