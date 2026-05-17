@@ -46,8 +46,15 @@ input[type="range"] {
 @media print {
   @page { size: A4 portrait; margin: 0; }
 
-  /* Prevent body overflow from shifting the fixed #print-recipe */
-  html, body { overflow: hidden; }
+  /* Force body to exactly A4 width so Chrome prints at 1:1 scale.
+     Without this, Chrome scales content based on screen viewport width
+     which crops the right side of the page. */
+  html, body {
+    width: 210mm;
+    min-width: 210mm;
+    max-width: 210mm;
+    overflow: hidden;
+  }
 
   body > * { visibility: hidden; }
 
