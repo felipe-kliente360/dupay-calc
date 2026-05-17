@@ -100,14 +100,19 @@ export function PrintRecipe({
    */
   return (
     <div id="print-recipe" style={{ display: 'none' }}>
+      {/*
+        Todas as 7 linhas com mm explícito — zero 1fr.
+        18+10+54+47+90+34+8 = 261mm + 6×3mm gaps = 279mm exatos.
+        Sem 1fr, o Chrome não precisa resolver alturas relativas.
+      */}
       <div style={{
         width: '100%',
         height: '279mm',
+        overflow: 'hidden',
         display: 'grid',
-        gridTemplateRows: '14mm 10mm 52mm 44mm 1fr 27mm 7mm',
+        gridTemplateRows: '18mm 10mm 54mm 47mm 90mm 34mm 8mm',
         gap: '3mm',
         fontFamily: lora, color: C.ink, fontSize: 9, lineHeight: 1.4,
-        overflow: 'hidden',
       }}>
 
         {/* ── HEADER ─────────────────────────────────────────────── */}
@@ -115,16 +120,16 @@ export function PrintRecipe({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           paddingBottom: '1.5mm', borderBottom: `2px solid ${C.amber}`, overflow: 'hidden',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <DupayLogo size={42} />
-            <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1, overflow: 'hidden' }}>
+            <DupayLogo size={40} />
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
               <div style={{ fontFamily: mono, fontSize: 7, color: C.amber, letterSpacing: 2, textTransform: 'uppercase' }}>
                 Cervecería Dupay
               </div>
-              <div style={{ fontFamily: serif, fontSize: 18, fontWeight: 800, color: C.ink, lineHeight: 1.1, marginTop: 2 }}>
+              <div style={{ fontFamily: serif, fontSize: 17, fontWeight: 800, color: C.ink, lineHeight: 1.1, marginTop: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 {recipeName || 'Receita Personalizada'}
               </div>
-              <div style={{ fontFamily: mono, fontSize: 7.5, color: C.inkMuted, marginTop: 2 }}>
+              <div style={{ fontFamily: mono, fontSize: 7.5, color: C.inkMuted, marginTop: 2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 {style?.id} — {style?.name}
               </div>
               <div style={{ fontFamily: mono, fontSize: 7, color: C.inkDim, marginTop: 1 }}>
@@ -133,7 +138,7 @@ export function PrintRecipe({
             </div>
           </div>
           <div style={{ textAlign: 'center', flexShrink: 0 }}>
-            <BeerGlass srm={srm} size={44} cat={style?.cat || ''} />
+            <BeerGlass srm={srm} size={40} cat={style?.cat || ''} />
             <div style={{ fontFamily: mono, fontSize: 7, color: C.inkMuted, marginTop: 2 }}>
               {srm.toFixed(1)} SRM · {ebc.toFixed(1)} EBC
             </div>
@@ -157,7 +162,7 @@ export function PrintRecipe({
         </div>
 
         {/* ── MALTES + LÚPULOS ───────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2mm', overflow: 'hidden' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2mm', overflow: 'hidden', minWidth: 0 }}>
 
           <div style={{ ...CARD, display: 'flex', flexDirection: 'column' }}>
             <div style={{ ...SEC, color: C.amber }}>🌾 Maltes · {totalKg.toFixed(2)} kg</div>
@@ -215,7 +220,7 @@ export function PrintRecipe({
         <div style={{
           display: 'grid',
           gridTemplateColumns: hasSalts && waterTarget ? '1fr 1.4fr 0.9fr' : '1fr 0.9fr',
-          gap: '2mm', overflow: 'hidden',
+          gap: '2mm', overflow: 'hidden', minWidth: 0,
         }}>
 
           <div style={{ ...CARD, display: 'flex', flexDirection: 'column' }}>
