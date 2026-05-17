@@ -26,7 +26,7 @@ interface CalculatorProps {
 export function Calculator({ onOpenEquip }: CalculatorProps) {
   const vw = useWidth();
   const mobile = vw < 900;
-  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip, waterSource, setWaterSource, salts, setSalts } = useApp();
+  const { styleId, setStyleId, grains, setGrains, hops, setHops, yeastId, setYeastId, customAtten, setCustomAtten, equip, waterSource, setWaterSource, salts, setSalts, recipeName, setRecipeName, nameError } = useApp();
 
   const style    = BJCP_STYLES.find(s => s.id === styleId);
   const yeast    = YEASTS_DB.find(y => y.id === yeastId);
@@ -58,22 +58,41 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const printBtn = (
-    <button
-      onClick={() => window.print()}
-      style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-        width: '100%', padding: '11px 0', borderRadius: 10,
-        background: 'none', border: `1.5px solid ${T.b2}`,
-        color: T.inkMuted, cursor: 'pointer',
-        fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
-        transition: 'border-color .2s, color .2s',
-      }}
-      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = T.amber; (e.currentTarget as HTMLButtonElement).style.color = T.amber; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = T.b2; (e.currentTarget as HTMLButtonElement).style.color = T.inkMuted; }}
-    >
-      📄 Exportar Ficha / Compartilhar
-    </button>
+  const nameInput = (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{
+        fontFamily: T.mono, fontSize: 8, color: nameError ? T.ng : T.inkDim,
+        letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6,
+        transition: 'color .2s',
+      }}>
+        {nameError ? '⚠ Informe o nome antes de exportar' : 'Nome da Receita'}
+      </div>
+      <input
+        id="recipe-name-input"
+        type="text"
+        value={recipeName}
+        onChange={e => setRecipeName(e.target.value)}
+        placeholder="Minha IPA Cítrica..."
+        className={nameError ? 'shake' : ''}
+        style={{
+          fontFamily: T.serif,
+          fontSize: mobile ? 22 : 28,
+          fontWeight: 700,
+          color: T.ink,
+          background: 'transparent',
+          border: 'none',
+          borderBottom: `2.5px solid ${nameError ? T.ng : T.b2}`,
+          outline: 'none',
+          width: '100%',
+          padding: '4px 0 6px',
+          letterSpacing: -0.5,
+          transition: 'border-color .2s',
+          caretColor: T.amber,
+        }}
+        onFocus={e => { e.currentTarget.style.borderBottomColor = T.amber; }}
+        onBlur={e => { e.currentTarget.style.borderBottomColor = nameError ? T.ng : T.b2; }}
+      />
+    </div>
   );
 
   const leftPanel = (
@@ -101,8 +120,6 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
       </div>
 
       <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
-
-      {printBtn}
 
       {/* Equipamento */}
       <div style={{ ...card, background: 'rgba(254,247,232,0.85)', borderColor: `${T.amber}44` }}>
@@ -147,6 +164,7 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   if (mobile) {
     return (
       <div>
+        {nameInput}
         <div style={{ ...card }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <div style={{ fontFamily: T.serif, fontSize: 15, fontWeight: 700, color: T.ink }}>🍺 Estilo Alvo</div>
@@ -166,11 +184,10 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
           )}
         </div>
         <ResultsPanel style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc} cat={style?.cat || ''} />
-        <div style={{ marginBottom: 20 }}>{printBtn}</div>
         {rightPanel}
         <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
           grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
-          totalKg={totalKg} boilOG={boilOG}
+          totalKg={totalKg} boilOG={boilOG} recipeName={recipeName}
           waterSource={waterSource} salts={salts}
           waterTarget={styleToTarget(styleId, style?.cat || '')} />
       </div>
@@ -179,13 +196,14 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
 
   return (
     <>
+      {nameInput}
       <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: 28, alignItems: 'start' }}>
         <div style={{ position: 'sticky', top: 88 }}>{leftPanel}</div>
         <div>{rightPanel}<WaterPanel waterCalc={waterCalc} totalGrainKg={totalKg} /></div>
       </div>
       <PrintRecipe style={style} og={og} fg={fg} ibu={ibu} abv={abv} srm={srm} ebc={ebc}
         grains={grains} hops={hops} yeast={yeast} waterCalc={waterCalc} equip={equip}
-        totalKg={totalKg} boilOG={boilOG}
+        totalKg={totalKg} boilOG={boilOG} recipeName={recipeName}
         waterSource={waterSource} salts={salts}
         waterTarget={styleToTarget(styleId, style?.cat || '')} />
     </>

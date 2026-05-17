@@ -17,7 +17,7 @@ interface HeaderProps {
 }
 
 export function Header({ mobile, onOpenEquip }: HeaderProps) {
-  const { activeTab, setActiveTab } = useApp();
+  const { activeTab, setActiveTab, printRecipe } = useApp();
 
   return (
     <header style={{
@@ -78,7 +78,7 @@ export function Header({ mobile, onOpenEquip }: HeaderProps) {
         {!mobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <button
-              onClick={() => window.print()}
+              onClick={printRecipe}
               title="Exportar ficha PDF"
               style={{
                 background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted,
@@ -114,7 +114,7 @@ export function Header({ mobile, onOpenEquip }: HeaderProps) {
         {mobile && (
           <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
             <button
-              onClick={() => window.print()}
+              onClick={printRecipe}
               title="Exportar ficha PDF"
               style={{
                 background: 'none', border: `1px solid ${T.b2}`, color: T.inkMuted,

@@ -16,6 +16,7 @@ interface PrintRecipeProps {
   equip: EquipProfile;
   totalKg: number;
   boilOG: number;
+  recipeName: string;
   waterSource: WaterSource;
   salts: SaltAdditions;
   waterTarget: WaterTarget | undefined;
@@ -83,7 +84,7 @@ function ionStatus(v: number, range: [number,number]): string {
 export function PrintRecipe({
   style, og, fg, ibu, abv, srm, ebc,
   grains, hops, yeast, waterCalc, equip, totalKg, boilOG,
-  waterSource, salts, waterTarget,
+  recipeName, waterSource, salts, waterTarget,
 }: PrintRecipeProps) {
 
   const grainRows = grains.map(g => {
@@ -129,10 +130,13 @@ export function PrintRecipe({
             <div>
               <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 8, color: C.amber, letterSpacing: 2, textTransform: 'uppercase' }}>Cervecería Dupay</div>
               <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22, fontWeight: 800, color: C.ink, lineHeight: 1.1, marginTop: 2 }}>
-                {style?.name || 'Receita Personalizada'}
+                {recipeName || 'Receita Personalizada'}
               </div>
               <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: C.inkMuted, marginTop: 3 }}>
-                {style?.id} &nbsp;·&nbsp; {style?.cat}
+                {style?.id} — {style?.name}
+              </div>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 8, color: C.inkDim, marginTop: 1, letterSpacing: 0.5 }}>
+                {style?.cat}
               </div>
             </div>
           </div>

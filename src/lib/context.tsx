@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { GrainEntry, HopEntry, EquipProfile, SavedRecipe, TabId, WaterSource, SaltAdditions } from './types';
 import { loadEquip, saveEquip, loadRecipes, saveRecipe as persistRecipe, deleteRecipe as removeRecipe, loadWater, saveWater } from './storage';
 
@@ -29,6 +29,10 @@ interface AppCtx {
   setCustomAtten: (a: number | null) => void;
   equip: EquipProfile;
   setEquip: (e: EquipProfile) => void;
+  recipeName: string;
+  setRecipeName: (n: string) => void;
+  nameError: boolean;
+  printRecipe: () => void;
   waterSource: WaterSource;
   setWaterSource: (w: WaterSource) => void;
   salts: SaltAdditions;
@@ -50,6 +54,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [yeastId, setYeastId]           = useState(101);
   const [customAtten, setCustomAtten]   = useState<number | null>(null);
   const [equip, setEquipState]          = useState<EquipProfile>(DEFAULT_EQUIP);
+  const [recipeName, setRecipeName]     = useState('');
+  const [nameError, setNameError]       = useState(false);
   const [waterSource, setWaterState]    = useState<WaterSource>(DEFAULT_WATER);
   const [salts, setSaltsState]          = useState<SaltAdditions>(DEFAULT_SALTS);
   const [activeTab, setActiveTab]       = useState<TabId>('calculator');
@@ -63,6 +69,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setEquip = (e: EquipProfile) => { setEquipState(e); saveEquip(e); };
+
+  const printRecipe = useCallback(() => {
+    if (!recipeName.trim()) {
+      setNameError(true);
+      setTimeout(() => setNameError(false), 1800);
+      const el = document.getElementById('recipe-name-input');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => el?.focus(), 400);
+      return;
+    }
+    window.print();
+  }, [recipeName]);
 
   const setWaterSource = (w: WaterSource) => {
     setWaterState(w);
@@ -113,6 +131,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       yeastId, setYeastId,
       customAtten, setCustomAtten,
       equip, setEquip,
+      recipeName, setRecipeName, nameError, printRecipe,
       waterSource, setWaterSource,
       salts, setSalts,
       activeTab, setActiveTab,
