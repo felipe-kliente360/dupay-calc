@@ -9,16 +9,16 @@ export default function Icon() {
       width: 512, height: 512, position: 'relative',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      {/* Background circle + amber outer ring */}
+      {/* Background rounded square + amber outer ring */}
       <div style={{
         position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
-        background: '#111108', borderRadius: '50%',
+        background: '#111108', borderRadius: '22%',
         border: '20px solid #C8900A',
       }} />
       {/* Inner amber ring */}
       <div style={{
         position: 'absolute', top: 28, right: 28, bottom: 28, left: 28,
-        borderRadius: '50%', border: '4px solid #C8900A',
+        borderRadius: '18%', border: '4px solid #C8900A',
       }} />
       {/* Hop trefoil + DUPAY text */}
       <div style={{

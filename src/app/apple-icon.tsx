@@ -9,16 +9,16 @@ export default function AppleIcon() {
       width: 180, height: 180, position: 'relative',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      {/* Background circle + amber outer ring */}
+      {/* Background rounded square + amber outer ring */}
       <div style={{
         position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
-        background: '#111108', borderRadius: '50%',
+        background: '#111108', borderRadius: '22%',
         border: '7px solid #C8900A',
       }} />
       {/* Inner amber ring */}
       <div style={{
         position: 'absolute', top: 10, right: 10, bottom: 10, left: 10,
-        borderRadius: '50%', border: '1.5px solid #C8900A',
+        borderRadius: '18%', border: '1.5px solid #C8900A',
       }} />
       {/* Hop trefoil + DUPAY text */}
       <div style={{
