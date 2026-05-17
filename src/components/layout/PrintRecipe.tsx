@@ -44,7 +44,8 @@ const serif = "'Playfair Display', Georgia, serif";
 const lora  = "'Lora', Georgia, serif";
 
 const CARD: React.CSSProperties = {
-  background: C.bg, border: `1px solid ${C.b1}`, borderRadius: 6, padding: '7px 9px',
+  background: C.bg, border: `1px solid ${C.b1}`, borderRadius: 6,
+  padding: '7px 9px', overflow: 'hidden',
 };
 const SEC: React.CSSProperties = {
   fontFamily: mono, fontSize: 7, fontWeight: 600,
@@ -105,9 +106,9 @@ export function PrintRecipe({
   return (
     <div id="print-recipe" style={{ display: 'none' }}>
 
-      {/* Flex column — fills the full A4 printable area */}
+      {/* Flex column — preenche exatamente a área imprimível do A4 (297mm − 9mm×2) */}
       <div style={{
-        width: '100%', height: '100%',
+        width: '100%', height: '279mm',
         fontFamily: lora, color: C.ink, fontSize: 9, lineHeight: 1.4,
         display: 'flex', flexDirection: 'column', gap: 6,
       }}>
@@ -279,7 +280,7 @@ export function PrintRecipe({
         </div>
 
         {/* ══ ROTEIRO DA BRASSAGEM — flex:2.5, steps distribuídos ══ */}
-        <div style={{ ...CARD, flex: 2.5, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ ...CARD, flex: 2.5, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <div style={{ ...SEC, color: C.amber, flex: '0 0 auto' }}>📋 Roteiro da Brassagem</div>
           <div style={{
             flex: 1, minHeight: 0,
