@@ -160,8 +160,8 @@ export function PrintRecipe({
           ))}
         </div>
 
-        {/* ══ MALTES + LÚPULOS — flex:2 ════════════════════════════ */}
-        <div style={{ flex: 2, minHeight: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
+        {/* ══ MALTES + LÚPULOS ════════════════════════════════════ */}
+        <div style={{ flex: '0 0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
 
           <div style={CARD}>
             <div style={{ ...SEC, color: C.amber }}>🌾 Maltes · {totalKg.toFixed(2)} kg</div>
@@ -211,9 +211,9 @@ export function PrintRecipe({
           </div>
         </div>
 
-        {/* ══ LEVEDURA · ÁGUA · VOLUMES — flex:1.5 ════════════════ */}
+        {/* ══ LEVEDURA · ÁGUA · VOLUMES ═══════════════════════════ */}
         <div style={{
-          flex: 1.5, minHeight: 0,
+          flex: '0 0 auto',
           display: 'grid',
           gridTemplateColumns: hasSalts && waterTarget ? '1fr 1fr 1fr' : '1fr 1fr',
           gap: 5,
@@ -279,13 +279,13 @@ export function PrintRecipe({
           </div>
         </div>
 
-        {/* ══ ROTEIRO DA BRASSAGEM — flex:2.5, steps distribuídos ══ */}
-        <div style={{ ...CARD, flex: 2.5, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        {/* ══ ROTEIRO DA BRASSAGEM — flex:1 preenche o restante ══ */}
+        <div style={{ ...CARD, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <div style={{ ...SEC, color: C.amber, flex: '0 0 auto' }}>📋 Roteiro da Brassagem</div>
           <div style={{
             flex: 1, minHeight: 0,
-            display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, rowGap: 0,
-            alignContent: 'space-between',
+            display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, rowGap: 14,
+            alignContent: 'start',
           }}>
             {steps.map(s => (
               <div key={s.n} style={{ display: 'flex', gap: 6, fontFamily: mono, fontSize: 8.5, color: C.inkMid, lineHeight: 1.45 }}>
