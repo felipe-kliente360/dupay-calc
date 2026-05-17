@@ -45,8 +45,15 @@ input[type="range"] {
     position: fixed;
     inset: 0;
     width: 100%;
+    height: 100%;
     background: white;
     overflow: hidden;
+  }
+
+  /* garante que o flex-column filho resolva height:100% corretamente */
+  #print-recipe > div {
+    height: 100% !important;
+    box-sizing: border-box;
   }
 
   #print-recipe * { visibility: visible; }
