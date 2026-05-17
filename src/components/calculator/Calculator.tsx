@@ -59,9 +59,9 @@ export function Calculator({ onOpenEquip }: CalculatorProps) {
   };
 
   const nameInput = (
-    <div style={{ marginBottom: 20 }}>
+    <div style={{ ...card }}>
       <div style={{
-        fontFamily: T.mono, fontSize: 8, color: nameError ? T.ng : T.inkDim,
+        fontFamily: T.mono, fontSize: 8, color: nameError ? T.ng : T.inkMuted,
         letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6,
         transition: 'color .2s',
       }}>
